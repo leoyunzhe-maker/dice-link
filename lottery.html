@@ -42,7 +42,7 @@
     <div class="dim">集章进度 · Booths collected</div>
     <div class="big"><span id="done">0</span> / <span id="total">0</span></div>
     <div class="bar"><i id="fill" style="width:0%"></i></div>
-    <div class="dim">剩余抽奖次数 · Draws left: <b id="left">0</b></div>
+    <div class="dim">已解锁 <b id="tot">0</b> 次 · 已用 <b id="used">0</b> 次 · 剩余 <b id="left">0</b> 次<br><span style="font-size:12px">Unlocked <span id="tot2">0</span> · Used <span id="used2">0</span> · Left <span id="left2">0</span></span></div>
   </div>
   <div class="card stage" id="stage" style="display:none">
     <div class="wheel" id="wheel">🎁</div>
@@ -52,7 +52,7 @@
     </div>
   </div>
   <button id="drawBtn" style="display:none" onclick="draw()">抽奖 · DRAW</button>
-  <div class="dim" style="text-align:center">集满一半摊位=1次 · ⅔=2次 · 全部=3次<br>中奖后请到工作人员处领取 · Show your win to staff to claim</div>
+  <div class="dim" style="text-align:center">盖第1个章=1次 · 集满一半=2次 · 全部=3次<br>中奖后请到工作人员处领取 · Show your win to staff to claim</div>
 </div>
 <script>
 const CODE = new URLSearchParams(location.search).get('code') || '';
@@ -72,7 +72,9 @@ function render(s) {
   $('drawBtn').style.display = 'block';
   $('done').textContent = s.collected; $('total').textContent = s.total;
   $('fill').style.width = (s.total ? Math.round(100 * s.collected / s.total) : 0) + '%';
-  $('left').textContent = s.chances_left;
+  $('left').textContent = s.chances_left; $('left2').textContent = s.chances_left;
+  $('tot').textContent = s.chances_total; $('tot2').textContent = s.chances_total;
+  $('used').textContent = s.chances_used; $('used2').textContent = s.chances_used;
   $('drawBtn').disabled = s.chances_left <= 0;
   $('drawBtn').textContent = s.chances_left > 0 ? '抽奖 · DRAW' : (s.chances_total > 0 ? '次数已用完 · NO DRAWS LEFT' : '继续集章解锁抽奖 · COLLECT MORE STAMPS');
 }
