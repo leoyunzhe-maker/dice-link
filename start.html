@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-itunes-app" content="app-id=6789398839">
+<title>Dice · Stamp Rally</title>
+<style>
+  body { background:#0e0b16; color:#f4f1ea; font:17px/1.6 -apple-system,system-ui,sans-serif;
+         min-height:100vh; display:flex; align-items:center; justify-content:center; margin:0; }
+  .box { text-align:center; padding:24px; }
+  .spin { width:44px; height:44px; border:3px solid #2b2438; border-top-color:#d4af37;
+          border-radius:50%; margin:0 auto 18px; animation:s 0.8s linear infinite; }
+  @keyframes s { to { transform:rotate(360deg); } }
+  .err { color:#ff8a8a; }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="spin" id="sp"></div>
+  <div id="msg">Preparing your stamp card…</div>
+</div>
+<script>
+// Entry point behind the printed QR. Mints (or reuses) an anonymous card,
+// then hands off to the tickets/name page which offers Add-to-Wallet.
+const EVENT = new URLSearchParams(location.search).get('event') || 'rally-2026';
+const LS = 'dice_card_' + EVENT;
+const FN = 'https://noyyqwifmucfliumkcgt.supabase.co/functions/v1';
+const BASE = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
+const KEY = 'sb_publishable_jLnIwihvXh5-fhcbWUoj1w_bL7j7DzA';
+const go = code => location.replace('lottery.html?code=' + encodeURIComponent(code));
+(async () => {
+  try {
+    const saved = localStorage.getItem(LS);
+    if (saved) {
+      // re-scan on the same phone -> reuse the existing card
+      const r = await fetch(BASE + 'card_status', { method:'POST',
+        headers:{ apikey:KEY, Authorization:'Bearer '+KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ p_card_code: saved }) });
+      const s = await r.json();
+      if (s && s.ok !== false) return go(saved);
+      localStorage.removeItem(LS);
+    }
+    const r = await fetch(`${FN}/issue-pass?event=${encodeURIComponent(EVENT)}&format=json`);
+    const j = await r.json();
+    if (!j || !j.ok) throw new Error('no card');
+    localStorage.setItem(LS, j.code);
+    go(j.code);
+  } catch (e) {
+    document.getElementById('sp').style.display = 'none';
+    document.getElementById('msg').className = 'err';
+    document.getElementById('msg').textContent = 'Something went wrong — please rescan the QR.';
+  }
+})();
+</script>
+</body>
+</html>
