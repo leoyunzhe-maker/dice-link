@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -35,34 +35,34 @@
 <body>
 <div class="wrap">
   <div>
-    <div class="eyebrow">STAMP RALLY · 我的奖券</div>
+    <div class="eyebrow">DICE STAMP RALLY</div>
     <h1>My Tickets</h1>
   </div>
   <div id="err" class="err hidden"></div>
 
   <div class="card" id="progress" style="display:none">
-    <div class="dim">集章进度 · Booths collected</div>
+    <div class="dim">Booths collected</div>
     <div class="big"><span id="done">0</span> / <span id="total">0</span></div>
     <div class="bar"><i id="fill" style="width:0%"></i></div>
-    <div class="dim">盖第1个章=1张奖券 · 集满一半=2张 · 全部=3张</div>
+    <div class="dim">First stamp = 1 ticket · half = 2 · all = 3</div>
   </div>
 
   <div class="card" id="namecard" style="display:none">
-    <div class="dim" style="margin-bottom:8px">你的名字(中奖时凭它领奖)· Your name — winners are called by it</div>
+    <div class="dim" style="margin-bottom:8px">Your name — winners are called by it when drawn</div>
     <div style="display:flex; gap:8px">
-      <input id="nameInput" maxlength="24" placeholder="输入名字 · Enter your name">
-      <button id="saveBtn" style="width:auto; padding:0 18px" onclick="saveName()">保存</button>
+      <input id="nameInput" maxlength="24" placeholder="Enter your name">
+      <button id="saveBtn" style="width:auto; padding:0 18px" onclick="saveName()">Save</button>
     </div>
-    <div id="nameOk" class="okmsg hidden" style="margin-top:8px">✓ 已保存 · Saved</div>
+    <div id="nameOk" class="okmsg hidden" style="margin-top:8px">✓ Saved</div>
   </div>
 
   <div class="card" id="tixcard" style="display:none">
-    <div class="dim" style="margin-bottom:10px">你的奖券号 · Your ticket numbers</div>
+    <div class="dim" style="margin-bottom:10px">Your ticket numbers</div>
     <div class="tix" id="tix"></div>
-    <div class="dim" id="notix" style="display:none">还没有奖券——去摊位盖章吧!· No tickets yet — collect stamps!</div>
+    <div class="dim" id="notix" style="display:none">No tickets yet — collect stamps!</div>
   </div>
 
-  <div class="dim" style="text-align:center">开奖由主办方现场公开进行,请留意大屏<br>Winners are drawn live by the organizers — watch the big screen!</div>
+  <div class="dim" style="text-align:center">Winners are drawn live by the organizers.<br>Watch the big screen and good luck!</div>
 </div>
 <script>
 const CODE = new URLSearchParams(location.search).get('code') || '';
@@ -76,9 +76,9 @@ async function rpc(fn, args) {
   return await r.json();
 }
 async function load() {
-  if (!CODE) { $('err').textContent = '缺少卡号 · Missing card code'; $('err').classList.remove('hidden'); return; }
+  if (!CODE) { $('err').textContent = 'Missing card code'; $('err').classList.remove('hidden'); return; }
   const s = await rpc('card_status', { p_card_code: CODE });
-  if (!s || s.ok === false) { $('err').textContent = '卡片无效 · Card not found'; $('err').classList.remove('hidden'); return; }
+  if (!s || s.ok === false) { $('err').textContent = 'Card not found'; $('err').classList.remove('hidden'); return; }
   $('progress').style.display = 'block';
   $('namecard').style.display = 'block';
   $('tixcard').style.display = 'block';
