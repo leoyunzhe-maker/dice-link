@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dice · Lucky Draw 开奖</title>
+<style>
+  :root { --bg:#0e0b16; --card:#181322; --line:#2b2438; --gold:#d4af37; --goldhi:#f0d98c; --pink:#ff5d8f; --fg:#f4f1ea; --dim:#9a92a8; }
+  * { box-sizing:border-box; margin:0; }
+  body { background:radial-gradient(120% 90% at 80% -10%, #241a38 0%, var(--bg) 55%);
+         color:var(--fg); font:16px/1.5 -apple-system,system-ui,sans-serif;
+         min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:36px 22px 60px; }
+  .wrap { width:100%; max-width:760px; display:flex; flex-direction:column; gap:20px; }
+  .eyebrow { color:var(--gold); font-size:13px; letter-spacing:4px; font-weight:700; }
+  h1 { font-size:44px; font-weight:600; font-family:Georgia,serif; }
+  h1 b { color:var(--gold); }
+  .card { background:var(--card); border:1px solid var(--line); padding:20px; border-radius:8px; }
+  .dim { color:var(--dim); font-size:14px; }
+  input { background:#0e0b16; border:1px solid var(--line); color:var(--fg);
+          padding:12px 14px; font-size:17px; border-radius:4px; flex:1; letter-spacing:2px; }
+  input:focus { outline:none; border-color:var(--gold); }
+  button { padding:14px 22px; border:0; background:var(--gold); color:#0a0a0d;
+           font-size:14px; font-weight:800; letter-spacing:2.5px; cursor:pointer; border-radius:4px; }
+  button:disabled { background:var(--line); color:var(--dim); cursor:default; }
+  .prizes { display:flex; flex-wrap:wrap; gap:10px; }
+  .prize { border:1px solid var(--line); padding:10px 16px; border-radius:6px; cursor:pointer; }
+  .prize.sel { border-color:var(--gold); background:rgba(212,175,55,0.12); }
+  .prize b { display:block; font-size:17px; }
+  .stage { min-height:280px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;
+           border:1px solid var(--line); border-radius:10px; background:rgba(0,0,0,0.25); padding:30px; position:relative; overflow:hidden; }
+  .num { font:800 96px/1 Georgia,serif; color:var(--goldhi); letter-spacing:6px;
+         text-shadow:0 0 40px rgba(212,175,55,0.45); min-height:100px; }
+  .winner { font-size:34px; font-weight:800; color:var(--pink); }
+  .plabel { font-size:18px; color:var(--gold); letter-spacing:3px; font-weight:700; }
+  .board td { padding:8px 14px; border-bottom:1px solid var(--line); font-size:16px; }
+  .board { width:100%; border-collapse:collapse; }
+  .board .no { color:var(--goldhi); font-weight:800; }
+  .confetti { position:absolute; top:-12px; width:10px; height:16px; opacity:0.9; animation:fall linear forwards; }
+  @keyframes fall { to { transform:translateY(360px) rotate(720deg); opacity:0; } }
+  .hidden { display:none; }
+  .row { display:flex; gap:10px; align-items:center; }
+  .err { color:#ff8a8a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <div class="eyebrow">DICE STAMP RALLY</div>
+    <h1>Lucky <b>Draw</b> · 现场开奖</h1>
+  </div>
+
+  <div class="card" id="gate">
+    <div class="dim" style="margin-bottom:10px">输入活动匹配码开始 · Enter the event code to start</div>
+    <div class="row">
+      <input id="codeInput" placeholder="Event code" autocapitalize="none">
+      <button onclick="unlock()">进入 ENTER</button>
+    </div>
+    <div id="gateErr" class="err hidden" style="margin-top:8px">匹配码不对 · Wrong code</div>
+  </div>
+
+  <div id="main" class="hidden" style="display:flex; flex-direction:column; gap:20px">
+    <div class="card">
+      <div class="dim" style="margin-bottom:10px">选择奖项 · Pick a prize (<span id="pool">0</span> 张奖券在池中)</div>
+      <div class="prizes" id="prizes"></div>
+    </div>
+
+    <div class="stage" id="stage">
+      <div class="plabel" id="stagePrize">— 选择奖项后开抽 —</div>
+      <div class="num" id="num">?</div>
+      <div class="winner hidden" id="winName"></div>
+      <button id="drawBtn" onclick="draw()" disabled>开 奖 · DRAW</button>
+      <div id="stageErr" class="err hidden"></div>
+    </div>
+
+    <div class="card">
+      <div class="dim" style="margin-bottom:8px">中奖名单 · Winners</div>
+      <table class="board"><tbody id="board"></tbody></table>
+      <div class="dim" id="noWin">暂无 · none yet</div>
+    </div>
+  </div>
+</div>
+<script>
+const EVENT = new URLSearchParams(location.search).get('event') || 'rally-2026';
+const BASE = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
+const KEY = 'sb_publishable_jLnIwihvXh5-fhcbWUoj1w_bL7j7DzA';
+const H = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Content-Type': 'application/json' };
+const $ = id => document.getElementById(id);
+let adminCode = localStorage.getItem('dice_draw_code') || '';
+let prizes = [], selPrize = null, rolling = false;
+
+async function rpc(fn, args) {
+  const r = await fetch(BASE + fn, { method: 'POST', headers: H, body: JSON.stringify(args) });
+  return await r.json();
+}
+async function refresh() {
+  const s = await rpc('raffle_status', { p_event_id: EVENT });
+  if (!s || s.ok === false) return;
+  prizes = s.prizes || [];
+  $('pool').textContent = s.pool ?? 0;
+  $('prizes').innerHTML = prizes.map(p => {
+    const left = p.stock == null ? '∞' : (p.stock - p.awarded);
+    return `<div class="prize ${selPrize===p.id?'sel':''}" onclick="pick('${p.id}')"><b>${p.name}</b><span class="dim">剩 ${left}</span></div>`;
+  }).join('');
+  const w = s.winners || [];
+  $('board').innerHTML = w.map(x =>
+    `<tr><td class="no">Nº ${String(x.ticket_no).padStart(3,'0')}</td><td>${x.name ? escapeHtml(x.name) : '(未留名)'}</td><td>${escapeHtml(x.prize)}</td></tr>`).join('');
+  $('noWin').style.display = w.length ? 'none' : 'block';
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function pick(id) {
+  if (rolling) return;
+  selPrize = id;
+  const p = prizes.find(x => x.id === id);
+  $('stagePrize').textContent = p ? p.name : '';
+  $('drawBtn').disabled = !selPrize;
+  $('winName').classList.add('hidden');
+  $('stageErr').classList.add('hidden');
+  $('num').textContent = '?';
+  refresh();
+}
+async function unlock() {
+  adminCode = $('codeInput').value.trim();
+  if (!adminCode) return;
+  localStorage.setItem('dice_draw_code', adminCode);
+  enter();
+}
+function enter() {
+  $('gate').classList.add('hidden');
+  $('main').classList.remove('hidden');
+  refresh();
+}
+function confetti() {
+  const stage = $('stage');
+  const colors = ['#d4af37','#f0d98c','#ff5d8f','#f4f1ea'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random()*100 + '%';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = (1.2 + Math.random()*1.6) + 's';
+    c.style.animationDelay = (Math.random()*0.4) + 's';
+    stage.appendChild(c);
+    setTimeout(() => c.remove(), 3400);
+  }
+}
+async function draw() {
+  if (!selPrize || rolling) return;
+  rolling = true;
+  $('drawBtn').disabled = true;
+  $('winName').classList.add('hidden');
+  $('stageErr').classList.add('hidden');
+
+  // fire the RPC while numbers roll
+  const promise = rpc('draw_raffle', { p_admin_code: adminCode, p_prize_id: selPrize });
+  const roll = setInterval(() => {
+    $('num').textContent = 'Nº ' + String(Math.floor(Math.random()*999)+1).padStart(3,'0');
+  }, 70);
+
+  const d = await promise;
+  // roll at least 2.8s for suspense, then decelerate
+  await new Promise(r => setTimeout(r, 2000));
+  clearInterval(roll);
+  for (const ms of [120, 180, 260, 380]) {
+    await new Promise(r => setTimeout(r, ms));
+    $('num').textContent = 'Nº ' + String(Math.floor(Math.random()*999)+1).padStart(3,'0');
+  }
+  if (!d || d.ok === false) {
+    $('num').textContent = '?';
+    const msg = d && d.error === 'bad_code' ? '匹配码不对 · Wrong code'
+      : d && d.error === 'no_tickets' ? '奖池已空 · No tickets left'
+      : d && d.error === 'out_of_stock' ? '该奖项已抽完 · Prize exhausted'
+      : '出错了 · Error';
+    $('stageErr').textContent = msg;
+    $('stageErr').classList.remove('hidden');
+    if (d && d.error === 'bad_code') { localStorage.removeItem('dice_draw_code'); }
+  } else {
+    $('num').textContent = 'Nº ' + String(d.ticket_no).padStart(3, '0');
+    $('winName').textContent = '🎉 ' + (d.holder_name || '(未留名的幸运儿)');
+    $('winName').classList.remove('hidden');
+    confetti();
+  }
+  rolling = false;
+  $('drawBtn').disabled = !selPrize;
+  refresh();
+}
+if (adminCode) { $('codeInput').value = adminCode; enter(); }
+</script>
+</body>
+</html>
