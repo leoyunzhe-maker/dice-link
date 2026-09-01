@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dice · Lucky Draw</title>
+<title>Dice · My Tickets</title>
 <style>
-  :root { --bg:#0e0b16; --card:#181322; --line:#2b2438; --gold:#d4af37; --pink:#ff5d8f; --fg:#f4f1ea; --dim:#9a92a8; }
+  :root { --bg:#0e0b16; --card:#181322; --line:#2b2438; --gold:#d4af37; --goldhi:#f0d98c; --pink:#ff5d8f; --fg:#f4f1ea; --dim:#9a92a8; }
   * { box-sizing:border-box; margin:0; }
   body { background:var(--bg); color:var(--fg); font:16px/1.5 -apple-system,system-ui,sans-serif;
          min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:28px 20px 48px; }
@@ -17,42 +17,52 @@
   .dim { color:var(--dim); font-size:14px; }
   .bar { height:10px; background:var(--line); border-radius:5px; overflow:hidden; margin:10px 0 8px; }
   .bar i { display:block; height:100%; background:var(--gold); border-radius:5px; transition:width .4s; }
-  .stage { min-height:200px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; }
-  .wheel { width:110px; height:110px; border-radius:50%; border:3px solid var(--gold);
-           display:flex; align-items:center; justify-content:center; font-size:44px; }
-  .spin { animation:sp .7s linear infinite; }
-  @keyframes sp { to { transform:rotate(360deg); } }
-  .result { font-size:22px; font-weight:700; text-align:center; }
-  .prize { color:var(--pink); font-size:26px; font-weight:800; text-align:center; }
-  button { width:100%; padding:16px; border:0; background:var(--gold); color:#0a0a0d;
+  input { width:100%; background:#0e0b16; border:1px solid var(--line); color:var(--fg);
+          padding:12px 14px; font-size:17px; border-radius:4px; }
+  input:focus { outline:none; border-color:var(--gold); }
+  button { width:100%; padding:14px; border:0; background:var(--gold); color:#0a0a0d;
            font-size:14px; font-weight:800; letter-spacing:2.5px; cursor:pointer; }
   button:disabled { background:var(--line); color:var(--dim); }
+  .tix { display:flex; flex-wrap:wrap; gap:10px; }
+  .ticket { border:1.5px dashed var(--gold); color:var(--goldhi); padding:10px 16px;
+            font-size:20px; font-weight:800; letter-spacing:1px; border-radius:6px;
+            background:rgba(212,175,55,0.08); }
   .err { color:#ff8a8a; text-align:center; padding:24px 0; }
+  .okmsg { color:#7fd4a0; font-size:14px; }
   .hidden { display:none; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div>
-    <div class="eyebrow">STAMP RALLY · 抽奖</div>
-    <h1>Lucky Draw</h1>
+    <div class="eyebrow">STAMP RALLY · 我的奖券</div>
+    <h1>My Tickets</h1>
   </div>
   <div id="err" class="err hidden"></div>
+
   <div class="card" id="progress" style="display:none">
     <div class="dim">集章进度 · Booths collected</div>
     <div class="big"><span id="done">0</span> / <span id="total">0</span></div>
     <div class="bar"><i id="fill" style="width:0%"></i></div>
-    <div class="dim">已解锁 <b id="tot">0</b> 次 · 已用 <b id="used">0</b> 次 · 剩余 <b id="left">0</b> 次<br><span style="font-size:12px">Unlocked <span id="tot2">0</span> · Used <span id="used2">0</span> · Left <span id="left2">0</span></span></div>
+    <div class="dim">盖第1个章=1张奖券 · 集满一半=2张 · 全部=3张</div>
   </div>
-  <div class="card stage" id="stage" style="display:none">
-    <div class="wheel" id="wheel">🎁</div>
-    <div id="outcome" class="hidden">
-      <div class="result" id="resultText"></div>
-      <div class="prize" id="prizeName"></div>
+
+  <div class="card" id="namecard" style="display:none">
+    <div class="dim" style="margin-bottom:8px">你的名字(中奖时凭它领奖)· Your name — winners are called by it</div>
+    <div style="display:flex; gap:8px">
+      <input id="nameInput" maxlength="24" placeholder="输入名字 · Enter your name">
+      <button id="saveBtn" style="width:auto; padding:0 18px" onclick="saveName()">保存</button>
     </div>
+    <div id="nameOk" class="okmsg hidden" style="margin-top:8px">✓ 已保存 · Saved</div>
   </div>
-  <button id="drawBtn" style="display:none" onclick="draw()">抽奖 · DRAW</button>
-  <div class="dim" style="text-align:center">盖第1个章=1次 · 集满一半=2次 · 全部=3次<br>中奖后请到工作人员处领取 · Show your win to staff to claim</div>
+
+  <div class="card" id="tixcard" style="display:none">
+    <div class="dim" style="margin-bottom:10px">你的奖券号 · Your ticket numbers</div>
+    <div class="tix" id="tix"></div>
+    <div class="dim" id="notix" style="display:none">还没有奖券——去摊位盖章吧!· No tickets yet — collect stamps!</div>
+  </div>
+
+  <div class="dim" style="text-align:center">开奖由主办方现场公开进行,请留意大屏<br>Winners are drawn live by the organizers — watch the big screen!</div>
 </div>
 <script>
 const CODE = new URLSearchParams(location.search).get('code') || '';
@@ -60,47 +70,32 @@ const BASE = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
 const KEY = 'sb_publishable_jLnIwihvXh5-fhcbWUoj1w_bL7j7DzA';
 const H = { 'apikey': KEY, 'Authorization': 'Bearer ' + KEY, 'Content-Type': 'application/json' };
 const $ = id => document.getElementById(id);
-let busy = false;
 
 async function rpc(fn, args) {
   const r = await fetch(BASE + fn, { method: 'POST', headers: H, body: JSON.stringify(args) });
   return await r.json();
 }
-function render(s) {
-  $('progress').style.display = 'block';
-  $('stage').style.display = 'flex';
-  $('drawBtn').style.display = 'block';
-  $('done').textContent = s.collected; $('total').textContent = s.total;
-  $('fill').style.width = (s.total ? Math.round(100 * s.collected / s.total) : 0) + '%';
-  $('left').textContent = s.chances_left; $('left2').textContent = s.chances_left;
-  $('tot').textContent = s.chances_total; $('tot2').textContent = s.chances_total;
-  $('used').textContent = s.chances_used; $('used2').textContent = s.chances_used;
-  $('drawBtn').disabled = s.chances_left <= 0;
-  $('drawBtn').textContent = s.chances_left > 0 ? '抽奖 · DRAW' : (s.chances_total > 0 ? '次数已用完 · NO DRAWS LEFT' : '继续集章解锁抽奖 · COLLECT MORE STAMPS');
-}
 async function load() {
   if (!CODE) { $('err').textContent = '缺少卡号 · Missing card code'; $('err').classList.remove('hidden'); return; }
   const s = await rpc('card_status', { p_card_code: CODE });
   if (!s || s.ok === false) { $('err').textContent = '卡片无效 · Card not found'; $('err').classList.remove('hidden'); return; }
-  render(s);
+  $('progress').style.display = 'block';
+  $('namecard').style.display = 'block';
+  $('tixcard').style.display = 'block';
+  $('done').textContent = s.collected; $('total').textContent = s.total;
+  $('fill').style.width = (s.total ? Math.round(100 * s.collected / s.total) : 0) + '%';
+  if (s.holder_name) $('nameInput').value = s.holder_name;
+  const tix = s.tickets || [];
+  $('tix').innerHTML = tix.map(n => `<div class="ticket">Nº ${String(n).padStart(3,'0')}</div>`).join('');
+  $('notix').style.display = tix.length ? 'none' : 'block';
 }
-async function draw() {
-  if (busy) return; busy = true;
-  $('outcome').classList.add('hidden');
-  $('wheel').classList.add('spin');
-  $('drawBtn').disabled = true;
-  const started = Date.now();
-  const d = await rpc('draw_lottery', { p_card_code: CODE });
-  setTimeout(async () => {
-    $('wheel').classList.remove('spin');
-    if (d && d.ok) {
-      $('outcome').classList.remove('hidden');
-      $('resultText').textContent = d.won ? '🎉 中奖了! · YOU WON!' : '差一点 · So close!';
-      $('prizeName').textContent = d.won ? (d.prize_name || '') : '';
-    }
-    await load();
-    busy = false;
-  }, Math.max(0, 1200 - (Date.now() - started)));
+async function saveName() {
+  const v = $('nameInput').value.trim();
+  if (!v) return;
+  $('saveBtn').disabled = true;
+  const r = await rpc('set_card_name', { p_card_code: CODE, p_name: v });
+  $('saveBtn').disabled = false;
+  if (r && r.ok) { $('nameOk').classList.remove('hidden'); setTimeout(() => $('nameOk').classList.add('hidden'), 2500); }
 }
 load();
 </script>
