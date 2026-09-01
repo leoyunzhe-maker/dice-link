@@ -41,6 +41,13 @@
   </div>
   <div id="err" class="err hidden"></div>
 
+  <div class="card" id="qrcard" style="display:none; align-items:center; text-align:center">
+    <div style="background:#fff; border-radius:12px; padding:14px; display:inline-block; margin:0 auto">
+      <canvas id="qrcanvas"></canvas>
+    </div>
+    <div class="dim" style="margin-top:10px">Show this QR at every booth to collect stamps</div>
+  </div>
+
   <a id="walletBtn" style="display:none; text-decoration:none" href="#">
     <div style="background:#000; border:1px solid rgba(255,255,255,0.35); border-radius:10px; padding:14px; text-align:center; color:#fff; font-weight:700; font-size:17px">
        Add to Apple Wallet
@@ -79,6 +86,7 @@
 
   <div class="dim" style="text-align:center">Winners are drawn live by the organizers.<br>Watch the big screen and good luck!</div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script>
 const CODE = new URLSearchParams(location.search).get('code') || '';
 const BASE = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
@@ -99,6 +107,8 @@ async function load() {
   $('tixcard').style.display = 'block';
   $('appcard').style.display = 'block';
   $('walletBtn').style.display = 'block';
+  $('qrcard').style.display = 'block';
+  try { window.QRCode && QRCode.toCanvas($('qrcanvas'), CODE, { width: 230, margin: 1, color: { dark: '#141021' } }); } catch (e) {}
   $('walletBtn').href = 'https://noyyqwifmucfliumkcgt.supabase.co/functions/v1/issue-pass?code=' + encodeURIComponent(CODE);
   $('openApp').href = 'dice://track/' + encodeURIComponent(CODE);
   $('done').textContent = s.collected; $('total').textContent = s.total;
