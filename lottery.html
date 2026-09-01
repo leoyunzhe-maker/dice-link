@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-itunes-app" content="app-id=6789398839">
 <title>Dice · My Tickets</title>
 <style>
   :root { --bg:#0e0b16; --card:#181322; --line:#2b2438; --gold:#d4af37; --goldhi:#f0d98c; --pink:#ff5d8f; --fg:#f4f1ea; --dim:#9a92a8; }
@@ -40,6 +41,12 @@
   </div>
   <div id="err" class="err hidden"></div>
 
+  <a id="walletBtn" style="display:none; text-decoration:none" href="#">
+    <div style="background:#000; border:1px solid rgba(255,255,255,0.35); border-radius:10px; padding:14px; text-align:center; color:#fff; font-weight:700; font-size:17px">
+       Add to Apple Wallet
+    </div>
+  </a>
+
   <div class="card" id="progress" style="display:none">
     <div class="dim">Booths collected</div>
     <div class="big"><span id="done">0</span> / <span id="total">0</span></div>
@@ -62,6 +69,14 @@
     <div class="dim" id="notix" style="display:none">No tickets yet — collect stamps!</div>
   </div>
 
+  <div class="card" id="appcard" style="display:none">
+    <div class="dim" style="margin-bottom:10px">Track your tickets in the Dice app</div>
+    <div style="display:flex; gap:10px">
+      <a id="openApp" href="#" style="flex:1; text-decoration:none"><div style="background:var(--gold); color:#0a0a0d; padding:12px; text-align:center; font-weight:800; letter-spacing:1px; border-radius:4px">OPEN IN DICE</div></a>
+      <a href="https://apps.apple.com/app/id6789398839" style="flex:1; text-decoration:none"><div style="border:1px solid var(--gold); color:var(--gold); padding:12px; text-align:center; font-weight:800; letter-spacing:1px; border-radius:4px">GET THE APP</div></a>
+    </div>
+  </div>
+
   <div class="dim" style="text-align:center">Winners are drawn live by the organizers.<br>Watch the big screen and good luck!</div>
 </div>
 <script>
@@ -82,6 +97,10 @@ async function load() {
   $('progress').style.display = 'block';
   $('namecard').style.display = 'block';
   $('tixcard').style.display = 'block';
+  $('appcard').style.display = 'block';
+  $('walletBtn').style.display = 'block';
+  $('walletBtn').href = 'https://noyyqwifmucfliumkcgt.supabase.co/functions/v1/issue-pass?code=' + encodeURIComponent(CODE);
+  $('openApp').href = 'dice://track/' + encodeURIComponent(CODE);
   $('done').textContent = s.collected; $('total').textContent = s.total;
   $('fill').style.width = (s.total ? Math.round(100 * s.collected / s.total) : 0) + '%';
   if (s.holder_name) $('nameInput').value = s.holder_name;
