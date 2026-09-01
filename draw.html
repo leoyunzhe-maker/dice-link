@@ -73,7 +73,10 @@
     </div>
 
     <div class="card">
-      <div class="dim" style="margin-bottom:8px">中奖名单 · Winners</div>
+      <div class="row" style="justify-content:space-between; margin-bottom:8px">
+        <div class="dim">中奖名单 · Winners</div>
+        <button onclick="resetRaffle()" style="background:transparent; color:var(--dim); border:1px solid var(--line); padding:8px 14px; font-size:12px">重置 · RESTART</button>
+      </div>
       <table class="board"><tbody id="board"></tbody></table>
       <div class="dim" id="noWin">暂无 · none yet</div>
     </div>
@@ -181,6 +184,15 @@ async function draw() {
   }
   rolling = false;
   $('drawBtn').disabled = !selPrize;
+  refresh();
+}
+async function resetRaffle() {
+  if (rolling) return;
+  if (!confirm('确定重置?会清空全部中奖记录并恢复奖品库存(奖券保留)。\nRestart the raffle? All winners are cleared, prize stock restored.')) return;
+  const r = await rpc('reset_raffle', { p_admin_code: adminCode, p_event_id: EVENT });
+  if (!r || r.ok === false) { alert('重置失败 · ' + (r && r.error === 'bad_code' ? '匹配码不对' : 'Error')); return; }
+  $('num').textContent = '?';
+  $('winName').classList.add('hidden');
   refresh();
 }
 if (adminCode) { $('codeInput').value = adminCode; enter(); }
