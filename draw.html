@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Dice · Lucky Draw 开奖</title>
+<title>Dice · Lucky Draw</title>
 <style>
   :root { --bg:#0e0b16; --card:#181322; --line:#2b2438; --gold:#d4af37; --goldhi:#f0d98c; --pink:#ff5d8f; --fg:#f4f1ea; --dim:#9a92a8; }
   * { box-sizing:border-box; margin:0; }
@@ -46,39 +46,39 @@
 <div class="wrap">
   <div>
     <div class="eyebrow">DICE STAMP RALLY</div>
-    <h1>Lucky <b>Draw</b> · 现场开奖</h1>
+    <h1>Lucky <b>Draw</b></h1>
   </div>
 
   <div class="card" id="gate">
-    <div class="dim" style="margin-bottom:10px">输入活动匹配码开始 · Enter the event code to start</div>
+    <div class="dim" style="margin-bottom:10px">Enter the event code to start</div>
     <div class="row">
       <input id="codeInput" placeholder="Event code" autocapitalize="none">
-      <button onclick="unlock()">进入 ENTER</button>
+      <button onclick="unlock()">ENTER</button>
     </div>
-    <div id="gateErr" class="err hidden" style="margin-top:8px">匹配码不对 · Wrong code</div>
+    <div id="gateErr" class="err hidden" style="margin-top:8px">Wrong code</div>
   </div>
 
   <div id="main" class="hidden" style="display:flex; flex-direction:column; gap:20px">
     <div class="card">
-      <div class="dim" style="margin-bottom:10px">选择奖项 · Pick a prize (<span id="pool">0</span> 张奖券在池中)</div>
+      <div class="dim" style="margin-bottom:10px">Pick a prize · <span id="pool">0</span> tickets in the pool</div>
       <div class="prizes" id="prizes"></div>
     </div>
 
     <div class="stage" id="stage">
-      <div class="plabel" id="stagePrize">— 选择奖项后开抽 —</div>
+      <div class="plabel" id="stagePrize">— pick a prize —</div>
       <div class="num" id="num">?</div>
       <div class="winner hidden" id="winName"></div>
-      <button id="drawBtn" onclick="draw()" disabled>开 奖 · DRAW</button>
+      <button id="drawBtn" onclick="draw()" disabled>DRAW</button>
       <div id="stageErr" class="err hidden"></div>
     </div>
 
     <div class="card">
       <div class="row" style="justify-content:space-between; margin-bottom:8px">
-        <div class="dim">中奖名单 · Winners</div>
-        <button onclick="resetRaffle()" style="background:transparent; color:var(--dim); border:1px solid var(--line); padding:8px 14px; font-size:12px">重置 · RESTART</button>
+        <div class="dim">Winners</div>
+        <button onclick="resetRaffle()" style="background:transparent; color:var(--dim); border:1px solid var(--line); padding:8px 14px; font-size:12px">RESTART</button>
       </div>
       <table class="board"><tbody id="board"></tbody></table>
-      <div class="dim" id="noWin">暂无 · none yet</div>
+      <div class="dim" id="noWin">None yet</div>
     </div>
   </div>
 </div>
@@ -102,11 +102,11 @@ async function refresh() {
   $('pool').textContent = s.pool ?? 0;
   $('prizes').innerHTML = prizes.map(p => {
     const left = p.stock == null ? '∞' : (p.stock - p.awarded);
-    return `<div class="prize ${selPrize===p.id?'sel':''}" onclick="pick('${p.id}')"><b>${p.name}</b><span class="dim">剩 ${left}</span></div>`;
+    return `<div class="prize ${selPrize===p.id?'sel':''}" onclick="pick('${p.id}')"><b>${p.name}</b><span class="dim">${left} left</span></div>`;
   }).join('');
   const w = s.winners || [];
   $('board').innerHTML = w.map(x =>
-    `<tr><td class="no">Nº ${String(x.ticket_no).padStart(3,'0')}</td><td>${x.name ? escapeHtml(x.name) : '(未留名)'}</td><td>${escapeHtml(x.prize)}</td></tr>`).join('');
+    `<tr><td class="no">Nº ${String(x.ticket_no).padStart(3,'0')}</td><td>${x.name ? escapeHtml(x.name) : '(unnamed)'}</td><td>${escapeHtml(x.prize)}</td></tr>`).join('');
   $('noWin').style.display = w.length ? 'none' : 'block';
 }
 function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
@@ -169,16 +169,16 @@ async function draw() {
   }
   if (!d || d.ok === false) {
     $('num').textContent = '?';
-    const msg = d && d.error === 'bad_code' ? '匹配码不对 · Wrong code'
-      : d && d.error === 'no_tickets' ? '奖池已空 · No tickets left'
-      : d && d.error === 'out_of_stock' ? '该奖项已抽完 · Prize exhausted'
-      : '出错了 · Error';
+    const msg = d && d.error === 'bad_code' ? 'Wrong code'
+      : d && d.error === 'no_tickets' ? 'No tickets left'
+      : d && d.error === 'out_of_stock' ? 'Prize exhausted'
+      : 'Error';
     $('stageErr').textContent = msg;
     $('stageErr').classList.remove('hidden');
     if (d && d.error === 'bad_code') { localStorage.removeItem('dice_draw_code'); }
   } else {
     $('num').textContent = 'Nº ' + String(d.ticket_no).padStart(3, '0');
-    $('winName').textContent = '🎉 ' + (d.holder_name || '(未留名的幸运儿)');
+    $('winName').textContent = '🎉 ' + (d.holder_name || '(unnamed lucky one)');
     $('winName').classList.remove('hidden');
     confetti();
   }
@@ -188,9 +188,9 @@ async function draw() {
 }
 async function resetRaffle() {
   if (rolling) return;
-  if (!confirm('确定重置?会清空全部中奖记录并恢复奖品库存(奖券保留)。\nRestart the raffle? All winners are cleared, prize stock restored.')) return;
+  if (!confirm('Restart the raffle? All winners are cleared and prize stock restored (tickets are kept).')) return;
   const r = await rpc('reset_raffle', { p_admin_code: adminCode, p_event_id: EVENT });
-  if (!r || r.ok === false) { alert('重置失败 · ' + (r && r.error === 'bad_code' ? '匹配码不对' : 'Error')); return; }
+  if (!r || r.ok === false) { alert('Reset failed: ' + (r && r.error === 'bad_code' ? 'wrong code' : 'error')); return; }
   $('num').textContent = '?';
   $('winName').classList.add('hidden');
   refresh();
