@@ -2446,7 +2446,14 @@ async function saveName() {
   $('saveBtn').disabled = true;
   const r = await rpc('set_card_name', { p_card_code: CODE, p_name: v });
   $('saveBtn').disabled = false;
-  if (r && r.ok) { $('nameOk').classList.remove('hidden'); setTimeout(() => $('nameOk').classList.add('hidden'), 2500); }
+  if (r && r.ok) {
+    $('nameOk').classList.remove('hidden'); setTimeout(() => $('nameOk').classList.add('hidden'), 2500);
+    // refresh the Wallet pass so the NAME field on the card updates right away
+    fetch('https://noyyqwifmucfliumkcgt.supabase.co/functions/v1/push-pass', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: CODE })
+    }).catch(() => {});
+  }
 }
 load();
 </script>
