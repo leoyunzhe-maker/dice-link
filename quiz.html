@@ -21,32 +21,43 @@
   .kicker{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:12px;letter-spacing:.32em;
     text-transform:uppercase;color:var(--ink);font-weight:600}
   .kicker .g{color:var(--gold)}
-  .rule{width:72px;height:2px;background:var(--gold);margin:18px 0}
-  h1.big{font-size:64px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
-  .tag{font-style:italic;color:var(--dim);font-size:19px;margin-top:10px}
+  .rule{width:72px;height:2px;background:var(--gold);margin:16px 0}
+  h1.big{font-size:58px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+  .tag{font-style:italic;color:var(--dim);font-size:18px;margin-top:10px;line-height:1.5}
   .label{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.28em;
     text-transform:uppercase;color:var(--dim);font-weight:600}
   .card{background:var(--face);border:1px solid var(--line);border-radius:18px;padding:22px}
   input[type=text]{
     width:100%;background:transparent;border:0;border-bottom:2px solid var(--ink);
-    font-family:inherit;font-size:26px;color:var(--ink);padding:10px 2px;outline:none;border-radius:0;
+    font-family:inherit;font-size:24px;color:var(--ink);padding:10px 2px;outline:none;border-radius:0;
   }
   input[type=text]::placeholder{color:#b6ac99;font-style:italic}
   .btn{
-    display:block;width:100%;margin-top:26px;padding:17px;border:0;border-radius:14px;cursor:pointer;
+    display:block;width:100%;margin-top:22px;padding:17px;border:0;border-radius:14px;cursor:pointer;
     background:var(--ink);color:var(--paper);font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;
-    font-size:14px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;
+    font-size:14px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;
   }
   .btn:active{transform:translateY(1px)}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
   .hidden{display:none!important}
+  /* language chips */
+  .langrow{display:flex;gap:10px;margin-bottom:18px}
+  .chip{
+    flex:1;padding:12px;border:1px solid var(--line);border-radius:12px;background:transparent;cursor:pointer;
+    font-family:inherit;font-size:17px;color:var(--dim);text-align:center;
+  }
+  .chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  /* how-to steps */
+  .step{display:flex;gap:14px;margin-top:14px;align-items:baseline}
+  .step .n{font-style:italic;color:var(--gold);font-size:19px;min-width:30px}
+  .step div p{color:var(--dim);font-size:14.5px;line-height:1.55;margin-top:2px}
+  .step div b{font-size:16.5px}
   /* quiz */
   .qtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
   .qnum{font-style:italic;color:var(--gold);font-size:22px}
   .timerline{height:3px;background:rgba(59,49,38,.16);border-radius:2px;overflow:hidden;margin:14px 0 26px}
   .timerline i{display:block;height:100%;background:var(--gold);width:100%}
-  .qcn{font-size:27px;line-height:1.35;font-weight:700}
-  .qen{font-style:italic;color:var(--dim);font-size:15px;margin-top:8px;line-height:1.4}
+  .qcn{font-size:26px;line-height:1.35;font-weight:700}
   .opts{margin-top:26px;display:grid;gap:12px}
   .opt{
     text-align:left;background:var(--face);border:1px solid var(--line);border-radius:14px;
@@ -65,15 +76,24 @@
     letter-spacing:.18em;color:var(--dim);font-weight:600}
   /* interstitial */
   .inter{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
-  .inter h2{font-size:52px;line-height:1.05}
-  /* results */
-  .bigscore{font-size:86px;line-height:1;font-weight:700}
-  .ranks{font-size:22px;margin-top:8px}
+  .inter h2{font-size:50px;line-height:1.05}
+  /* results — rank hero */
+  .rankwrap{text-align:center;margin-top:34px}
+  .rankhero{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:10px}
+  .rankhero .no{font-style:italic;font-size:44px;color:var(--gold)}
+  .rankhero .num{font-size:150px;line-height:.95;font-weight:700;color:var(--gold);
+    text-shadow:0 2px 0 rgba(59,49,38,.18)}
+  .tier{font-size:23px;margin-top:14px;font-weight:700}
+  .oftotal{color:var(--dim);font-style:italic;font-size:16px;margin-top:6px}
+  .scoreline{margin-top:18px;font-size:19px}
+  .flour{display:flex;align-items:center;gap:14px;justify-content:center;margin-top:26px;color:var(--gold)}
+  .flour::before,.flour::after{content:'';height:1px;width:70px;background:var(--gold);display:block}
   table.lb{width:100%;border-collapse:collapse;margin-top:14px}
-  table.lb td{padding:10px 4px;border-bottom:1px solid rgba(59,49,38,.15);font-size:17px}
-  table.lb td.r{font-style:italic;color:var(--gold);width:36px}
+  table.lb td{padding:12px 6px;border-bottom:1px solid rgba(59,49,38,.15);font-size:19px}
+  table.lb td.r{font-style:italic;color:var(--gold);width:44px;font-size:20px}
   table.lb td.s{text-align:right;font-variant-numeric:tabular-nums}
-  table.lb tr.me td{font-weight:700;background:rgba(169,136,91,.12)}
+  table.lb tr.top3 td{font-weight:700}
+  table.lb tr.me td{background:rgba(169,136,91,.14)}
   .divider{height:1px;background:var(--line);margin:36px 0 28px;position:relative}
   .divider::after{content:'◆';position:absolute;left:50%;top:-9px;transform:translateX(-50%);
     color:var(--gold);font-size:11px;background:var(--paper);padding:0 10px}
@@ -81,32 +101,57 @@
   .feat .n{font-style:italic;color:var(--gold);font-size:19px;min-width:34px}
   .feat b{font-size:18px}
   .feat p{color:var(--dim);font-size:14.5px;margin-top:3px;line-height:1.5}
-  .qrrow{display:flex;gap:20px;align-items:center;margin-top:28px}
-  .qrrow img{width:132px;height:132px;border:1px solid var(--line);border-radius:14px;background:var(--face);padding:8px}
+  .qrrow{display:flex;gap:20px;align-items:center;margin-top:26px}
+  .qrbox{width:140px;height:140px;flex:0 0 140px;border:1px solid var(--line);border-radius:14px;
+    background:#fff;padding:10px}
+  .qrbox svg{width:100%;height:100%;display:block}
   .vfoot{margin-top:auto;padding-top:36px;text-align:center}
   .vfoot span{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:10px;
     letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
-  @media (max-width:420px){ h1.big{font-size:52px} .qcn{font-size:23px} .bigscore{font-size:70px} }
+  @media (max-width:420px){ h1.big{font-size:48px} .qcn{font-size:22px} .rankhero .num{font-size:120px} }
 </style>
 </head>
 <body>
 
 <!-- ============ WELCOME ============ -->
 <div class="wrap" id="scrWelcome">
-  <div class="kicker">IEHO × <span class="g">DICE</span> — LIVE TRIVIA · 现场问答</div>
-  <div style="margin-top:64px">
+  <div class="kicker">IEHO × <span class="g">DICE</span> — LIVE TRIVIA</div>
+  <div style="margin-top:40px">
     <h1 class="big">Dice,</h1>
     <div class="rule"></div>
-    <div class="tag">Meet Montréal, one roll at a time.</div>
+    <div class="tag" id="wTag"></div>
   </div>
-  <div class="card" style="margin-top:48px">
-    <div class="label" style="margin-bottom:14px">你的名字 · Your name</div>
-    <input type="text" id="uname" maxlength="24" placeholder="e.g. 小骰子" autocomplete="off">
-    <button class="btn" id="btnStart">开始 — Start</button>
+
+  <div class="card" style="margin-top:30px">
+    <div class="label" style="margin-bottom:14px" id="wLangLabel"></div>
+    <div class="langrow">
+      <button class="chip on" id="chipZh">中文</button>
+      <button class="chip" id="chipEn">English</button>
+    </div>
+    <div class="label" style="margin-bottom:10px" id="wNameLabel"></div>
+    <input type="text" id="uname" maxlength="24" autocomplete="off">
+    <button class="btn" id="btnStart"></button>
   </div>
-  <div style="margin-top:26px;color:var(--dim);font-size:14.5px;line-height:1.7">
-    两个部分共 12 题：<i>Part I</i> 今日嘉宾与 IEHO · <i>Part II</i> Montréal 冷知识。<br>
-    每题 15 秒，答得越快分越高。答完看排名，冲榜！
+
+  <div style="margin-top:30px">
+    <div class="label" id="wHowLabel"></div>
+    <div class="step"><div class="n">01</div><div><b id="h1b"></b><p id="h1p"></p></div></div>
+    <div class="step"><div class="n">02</div><div><b id="h2b"></b><p id="h2p"></p></div></div>
+    <div class="step"><div class="n">03</div><div><b id="h3b"></b><p id="h3p"></p></div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div>
+    <div class="label" id="wWhatLabel"></div>
+    <div class="tag" style="margin-top:10px" id="wPitch"></div>
+    <div class="qrrow">
+      <div class="qrbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#3b3126" d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM15 0h1v1h-1zM17 0h2v1h-2zM20 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM13 1h2v1h-2zM17 1h1v1h-1zM19 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h2v1h-2zM15 2h4v1h-4zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h2v1h-2zM13 3h1v1h-1zM18 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h2v1h-2zM11 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h2v1h-2zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h4v1h-4zM14 7h7v1h-7zM0 8h1v1h-1zM4 8h1v1h-1zM6 8h7v1h-7zM14 8h4v1h-4zM20 8h6v1h-6zM28 8h1v1h-1zM0 9h1v1h-1zM2 9h4v1h-4zM7 9h1v1h-1zM9 9h1v1h-1zM11 9h2v1h-2zM15 9h1v1h-1zM22 9h1v1h-1zM24 9h5v1h-5zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h2v1h-2zM15 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM24 10h1v1h-1zM28 10h1v1h-1zM0 11h3v1h-3zM4 11h2v1h-2zM8 11h1v1h-1zM10 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h2v1h-2zM0 12h1v1h-1zM2 12h2v1h-2zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h4v1h-4zM16 12h2v1h-2zM19 12h3v1h-3zM23 12h1v1h-1zM27 12h1v1h-1zM0 13h2v1h-2zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h2v1h-2zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h2v1h-2zM22 13h7v1h-7zM0 14h4v1h-4zM5 14h6v1h-6zM13 14h3v1h-3zM17 14h1v1h-1zM21 14h3v1h-3zM25 14h2v1h-2zM28 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h3v1h-3zM19 15h2v1h-2zM22 15h2v1h-2zM27 15h2v1h-2zM2 16h1v1h-1zM4 16h5v1h-5zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h4v1h-4zM20 16h2v1h-2zM23 16h1v1h-1zM27 16h1v1h-1zM0 17h1v1h-1zM2 17h3v1h-3zM7 17h1v1h-1zM9 17h3v1h-3zM13 17h3v1h-3zM17 17h2v1h-2zM20 17h6v1h-6zM27 17h2v1h-2zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h1v1h-1zM12 18h1v1h-1zM15 18h2v1h-2zM18 18h1v1h-1zM20 18h4v1h-4zM26 18h1v1h-1zM28 18h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM10 19h1v1h-1zM14 19h5v1h-5zM20 19h4v1h-4zM27 19h2v1h-2zM0 20h3v1h-3zM4 20h1v1h-1zM6 20h12v1h-12zM19 20h7v1h-7zM28 20h1v1h-1zM8 21h1v1h-1zM10 21h1v1h-1zM15 21h1v1h-1zM17 21h4v1h-4zM24 21h1v1h-1zM28 21h1v1h-1zM0 22h7v1h-7zM8 22h1v1h-1zM10 22h6v1h-6zM17 22h1v1h-1zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h3v1h-3zM28 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM17 23h4v1h-4zM24 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h2v1h-2zM13 24h1v1h-1zM16 24h2v1h-2zM19 24h7v1h-7zM27 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h2v1h-2zM14 25h2v1h-2zM18 25h4v1h-4zM23 25h1v1h-1zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h2v1h-2zM12 26h9v1h-9zM25 26h4v1h-4zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM17 27h1v1h-1zM20 27h3v1h-3zM25 27h1v1h-1zM27 27h2v1h-2zM0 28h7v1h-7zM8 28h1v1h-1zM13 28h2v1h-2zM16 28h3v1h-3zM20 28h1v1h-1zM24 28h2v1h-2zM27 28h1v1h-1z"/></svg></div>
+      <div>
+        <div class="label" style="margin-bottom:8px">App Store</div>
+        <div style="font-size:15px;color:var(--dim);line-height:1.6" id="wQrTxt"></div>
+      </div>
+    </div>
   </div>
   <div class="vfoot"><span>Dice MTL — EST. 2026 · Montréal</span></div>
 </div>
@@ -114,17 +159,17 @@
 <!-- ============ INTERSTITIAL ============ -->
 <div class="wrap hidden" id="scrInter">
   <div class="inter">
-    <div class="kicker" id="interKicker">PART I</div>
-    <h2 id="interTitle" style="margin-top:18px">今日现场,</h2>
+    <div class="kicker" id="interKicker"></div>
+    <h2 id="interTitle" style="margin-top:18px"></h2>
     <div class="rule"></div>
-    <div class="tag" id="interSub">关于今天的嘉宾与 IEHO</div>
+    <div class="tag" id="interSub"></div>
   </div>
 </div>
 
 <!-- ============ QUIZ ============ -->
 <div class="wrap hidden" id="scrQuiz">
   <div class="qtop">
-    <div class="kicker" id="qPart">PART I · 今日现场</div>
+    <div class="kicker" id="qPart"></div>
     <div class="scorepill" id="qScore">SCORE 0</div>
   </div>
   <div class="qtop">
@@ -133,45 +178,44 @@
   </div>
   <div class="timerline"><i id="qBar"></i></div>
   <div class="qcn" id="qCn"></div>
-  <div class="qen" id="qEn"></div>
   <div class="opts" id="qOpts"></div>
   <div class="fact hidden" id="qFact"></div>
-  <button class="btn hidden" id="btnNext">下一题 — Next</button>
+  <button class="btn hidden" id="btnNext"></button>
 </div>
 
 <!-- ============ RESULTS ============ -->
 <div class="wrap hidden" id="scrResult">
-  <div class="kicker">RESULTS · <span class="g">成绩单</span></div>
-  <div style="margin-top:40px">
-    <div class="label">Final score · <span id="rName"></span></div>
-    <div class="bigscore" id="rScore">0</div>
-    <div class="ranks" id="rRank"></div>
-    <div class="rule"></div>
+  <div class="kicker" id="rKicker"></div>
+
+  <div class="rankwrap">
+    <div class="label" id="rRankLabel"></div>
+    <div class="rankhero"><span class="no">N°</span><span class="num" id="rRankNum">–</span></div>
+    <div class="tier" id="rTier"></div>
+    <div class="oftotal" id="rOfTotal"></div>
+    <div class="scoreline"><span id="rScoreLine"></span></div>
+    <div class="flour">◆</div>
   </div>
-  <div>
-    <div class="label" style="margin:10px 0 2px">Leaderboard · 排行榜</div>
+
+  <div style="margin-top:26px">
+    <div class="label" id="rBoardLabel"></div>
     <table class="lb" id="rBoard"></table>
     <div id="rNote" style="color:var(--dim);font-size:13px;margin-top:8px;font-style:italic"></div>
   </div>
 
   <div class="divider"></div>
 
-  <div class="kicker">ABOUT — <span class="g">关于</span></div>
-  <h1 class="big" style="font-size:52px;margin-top:12px">Dice,</h1>
-  <div class="tag">Dice 是一款属于蒙特利尔的本地社交 App——把线下活动、朋友和这座城市连在一起。</div>
-  <div style="margin-top:10px">
-    <div class="feat"><div class="n">01</div><div><b>活动与集章 · Events &amp; Stamps</b><p>发现身边的线下活动，扫码集章、解锁抽奖。Discover happenings, collect stamps, unlock the draw.</p></div></div>
-    <div class="feat"><div class="n">02</div><div><b>墙 · The Wall</b><p>实名或匿名，把想说的话留在墙上。Say it your way — signed or anonymous.</p></div></div>
-    <div class="feat"><div class="n">03</div><div><b>匹配 · Match</b><p>从虚拟头像开始的对话，变成现实中真正的朋友。Start behind an avatar, end with a real friend.</p></div></div>
-  </div>
+  <div class="kicker" id="rAboutKicker"></div>
+  <h1 class="big" style="font-size:48px;margin-top:12px">Dice,</h1>
+  <div class="tag" id="rAboutPitch"></div>
+  <div style="margin-top:8px" id="rFeats"></div>
   <div class="qrrow">
-    <img alt="App Store QR" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPgAAAD4CAIAAABOs7xcAAAE1klEQVR4nO3dMW5cNxRAUSnwqgKkmnVPFSCrUalCZVYwAYiQJjn3nNbG+I98QRjv0+Tnz/fXB7y7P3Y/APwOQidB6CQInQShkyB0EoROwq9Xv/D468+PGzz//mfK849+zqvfP2r083d9r8flPVjRSRA6CUInQegkCJ0EoZMgdNpz9FdmzY9HzZofjxr9nNOec/V7gOclPVjRSRA6CUInQegkCJ0EoZMgdBKG5+ivzNqvvHouu2v/9+jz7Ppez8X77EfNeh4rOglCJ0HoJAidBKGTIHQShE7CtDn6aXbNcUfn06vn1qvn5bewopMgdBKEToLQSRA6CUInQegkvO0cfZbTzkcfVZuXv2JFJ0HoJAidBKGTIHQShE6C0EmYNke/ZV67+t7NXb//lV370Z+H9WBFJ0HoJAidBKGTIHQShE6C0En4teu8FH6PXXP601jRSRA6CUInQegkCJ0EoZMgdD4+f76/Pt7R6vnuu86bn4ftI5/Fik6C0EkQOglCJ0HoJAidBKHTnqOfdi747XNoc/3/tvq8Gis6CUInQegkCJ0EoZMgdBKETsK089FnzYlPO3d81vdafb7KrOd5ZfXPbfV7Bis6CUInQegkCJ0EoZMgdBKETnuOPmuOe/v+9dPOOdl1/+jzkh5esaKTIHQShE6C0EkQOglCJ0HotOfoq/cHj37+6jnuu55jc8v+/ufin4MVnQShkyB0EoROgtBJEDoJQidh+FyX0Xnnafun3/Vc9lGPTd9r1752KzoJQidB6CQInQShkyB0EoROwvA9o6/csl/59ufc5XHJ+wT3jJLmny4kCJ0EoZMgdBKEToLQSTjuntHVn7/r3tBZdp0/M2rXe49XrOgkCJ0EoZMgdBKEToLQSRA6CdPOdXll132fp53fMus8nFG75tan9WNFJ0HoJAidBKGTIHQShE6C0GnP0U+bW582577l3JXV59k/Ljln3YpOgtBJEDoJQidB6CQInQSh056jr74f9Jb5/Syn7Qsftfq9x+q/dys6CUInQegkCJ0EoZMgdBKETsK0/eijn7N6Lrvr3tBZ8+Bb3g/c8j7Eik6C0EkQOglCJ0HoJAidBKGTMO2e0dX3XJ527squc75Pm5fPsvr9gBWdBKGTIHQShE6C0EkQOglCJ+Hz5/try72St++3Ps3tP7enc13g//NPFxKEToLQSRA6CUInQei05+i3u2Vf+2nvE56b/l/B6s+3opMgdBKEToLQSRA6CUInQegkDN8zeppdc+7TrJ67Py65d/YVKzoJQidB6CQInQShkyB0EoROwq/T5tar56+33D866pZ96s9Nn2NFJ0HoJAidBKGTIHQShE6C0EmYds/o6vPUb3+e094b7JrH73ovYUUnQegkCJ0EoZMgdBKEToLQSZg2Rz/N6Fx21rx21jx79Xkpo3btv5/151rRSRA6CUInQegkCJ0EoZMgdBLedo6+2q5926s9J703OO17WdFJEDoJQidB6CQInQShkyB0EqbN0XedfzJq137xWVbf9/nY9HNYfU+qFZ0EoZMgdBKEToLQSRA6CUInYXiOvms/8ep5865z2Vefa756f/kt955a0UkQOglCJ0HoJAidBKGTIHQSPn++v3Y/AyxnRSdB6CQInQShkyB0EoROgtD5KPgXbSEUwpM2ONYAAAAASUVORK5CYII=">
+    <div class="qrbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#3b3126" d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM15 0h1v1h-1zM17 0h2v1h-2zM20 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM13 1h2v1h-2zM17 1h1v1h-1zM19 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h2v1h-2zM15 2h4v1h-4zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h2v1h-2zM13 3h1v1h-1zM18 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h2v1h-2zM11 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h2v1h-2zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h4v1h-4zM14 7h7v1h-7zM0 8h1v1h-1zM4 8h1v1h-1zM6 8h7v1h-7zM14 8h4v1h-4zM20 8h6v1h-6zM28 8h1v1h-1zM0 9h1v1h-1zM2 9h4v1h-4zM7 9h1v1h-1zM9 9h1v1h-1zM11 9h2v1h-2zM15 9h1v1h-1zM22 9h1v1h-1zM24 9h5v1h-5zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h2v1h-2zM15 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM24 10h1v1h-1zM28 10h1v1h-1zM0 11h3v1h-3zM4 11h2v1h-2zM8 11h1v1h-1zM10 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h2v1h-2zM0 12h1v1h-1zM2 12h2v1h-2zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h4v1h-4zM16 12h2v1h-2zM19 12h3v1h-3zM23 12h1v1h-1zM27 12h1v1h-1zM0 13h2v1h-2zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h2v1h-2zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h2v1h-2zM22 13h7v1h-7zM0 14h4v1h-4zM5 14h6v1h-6zM13 14h3v1h-3zM17 14h1v1h-1zM21 14h3v1h-3zM25 14h2v1h-2zM28 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h3v1h-3zM19 15h2v1h-2zM22 15h2v1h-2zM27 15h2v1h-2zM2 16h1v1h-1zM4 16h5v1h-5zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h4v1h-4zM20 16h2v1h-2zM23 16h1v1h-1zM27 16h1v1h-1zM0 17h1v1h-1zM2 17h3v1h-3zM7 17h1v1h-1zM9 17h3v1h-3zM13 17h3v1h-3zM17 17h2v1h-2zM20 17h6v1h-6zM27 17h2v1h-2zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h1v1h-1zM12 18h1v1h-1zM15 18h2v1h-2zM18 18h1v1h-1zM20 18h4v1h-4zM26 18h1v1h-1zM28 18h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM10 19h1v1h-1zM14 19h5v1h-5zM20 19h4v1h-4zM27 19h2v1h-2zM0 20h3v1h-3zM4 20h1v1h-1zM6 20h12v1h-12zM19 20h7v1h-7zM28 20h1v1h-1zM8 21h1v1h-1zM10 21h1v1h-1zM15 21h1v1h-1zM17 21h4v1h-4zM24 21h1v1h-1zM28 21h1v1h-1zM0 22h7v1h-7zM8 22h1v1h-1zM10 22h6v1h-6zM17 22h1v1h-1zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h3v1h-3zM28 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM17 23h4v1h-4zM24 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h2v1h-2zM13 24h1v1h-1zM16 24h2v1h-2zM19 24h7v1h-7zM27 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h2v1h-2zM14 25h2v1h-2zM18 25h4v1h-4zM23 25h1v1h-1zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h2v1h-2zM12 26h9v1h-9zM25 26h4v1h-4zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM17 27h1v1h-1zM20 27h3v1h-3zM25 27h1v1h-1zM27 27h2v1h-2zM0 28h7v1h-7zM8 28h1v1h-1zM13 28h2v1h-2zM16 28h3v1h-3zM20 28h1v1h-1zM24 28h2v1h-2zM27 28h1v1h-1z"/></svg></div>
     <div>
-      <div class="label" style="margin-bottom:8px">Scan to join</div>
-      <div style="font-size:15px;color:var(--dim);line-height:1.6">扫码下载 Dice<br>Dice — on the App Store</div>
+      <div class="label" style="margin-bottom:8px" id="rQrLabel"></div>
+      <div style="font-size:15px;color:var(--dim);line-height:1.6" id="rQrTxt"></div>
     </div>
   </div>
-  <button class="btn ghost" id="btnAgain" style="margin-top:34px">下一位玩家 — Next player</button>
+  <button class="btn ghost" id="btnAgain" style="margin-top:34px"></button>
   <div class="vfoot"><span>Events · Friends · Montréal</span></div>
 </div>
 
@@ -187,52 +231,160 @@ async function rpc(fn, args){
   return await r.json();
 }
 
+// ------------------------------ i18n ------------------------------
+let L = 'zh';
+const T = {
+ zh:{
+  tag:'蒙特利尔本地社交 App 现场问答——答题、冲榜、认识 Dice。',
+  langLabel:'语言 · Language', nameLabel:'你的名字', nameHint:'e.g. 小骰子', start:'开始挑战',
+  howLabel:'怎么玩 · How to play',
+  h1b:'回答 12 道选择题', h1p:'Part I 关于今天的嘉宾与 IEHO，Part II 关于蒙特利尔的冷知识。都很简单，别慌。',
+  h2b:'每题 15 秒，手快分高', h2p:'答对得 100 分，剩余时间越多加成越高（最多 200 分/题）。',
+  h3b:'答完看排名', h3p:'实时排行榜，冲进前三很有排面。顺便认识一下 Dice——今天摊位的主角。',
+  whatLabel:'这是什么 · What is Dice',
+  pitch:'Dice 是蒙特利尔的本地社交 App：开放式多样化活动、结伴 hiking 位置分享、匿名的墙、真实的匹配。先扫码装上，答完题你就懂了。',
+  qrTxt:'扫码下载 Dice<br>Dice — on the App Store',
+  p1Kicker:'PART I', p1Title:'今日现场,', p1Sub:'关于今天的嘉宾与 IEHO',
+  p2Kicker:'PART II', p2Title:'Montréal,', p2Sub:'关于这座城市的冷知识',
+  qPart1:'PART I · 今日现场', qPart2:'PART II · MONTRÉAL',
+  next:'下一题', results:'看成绩', correct:'分！', wrong:'不对哦', timeout:'时间到',
+  rKicker:'RESULTS · 成绩单', rankLabel:'你的名次 · Your rank',
+  ofTotal:(t)=>'共 '+t+' 位挑战者', scoreLine:(n,s)=>n+' · 总分 '+s,
+  tier1:'👑 全场之王', tier3:'🏆 登上领奖台', tier10:'✨ 挤进前十', tierElse:'继续修行，蒙特利尔等你',
+  boardLabel:'排行榜 · Top 10', offline:'（本机排行榜 · 未连接网络）',
+  aboutKicker:'ABOUT — 关于',
+  aboutPitch:'Dice 是一款属于蒙特利尔的本地社交 App——把线下活动、朋友和这座城市连在一起。',
+  feats:[
+   ['开放式多样化活动','任何人都能发起活动，形式不设限——桌游、City Walk、观影、快闪，怎么玩你说了算。'],
+   ['Hiking · 位置分享','结伴徒步，实时分享位置，一起出发也一起安全到达。'],
+   ['墙','实名或匿名，把想说的话留在墙上，听见这座城市真实的声音。'],
+   ['匹配','从虚拟头像开始的对话，变成现实中真正的朋友。'],
+  ],
+  qrLabel:'Scan to join', qrTxt2:'扫码下载 Dice<br>Dice — on the App Store',
+  again:'下一位玩家',
+ },
+ en:{
+  tag:'Live trivia by Montréal’s local social app — play, rank up, meet Dice.',
+  langLabel:'Language · 语言', nameLabel:'Your name', nameHint:'e.g. Lucky Dice', start:'Start',
+  howLabel:'How to play',
+  h1b:'Answer 12 quick questions', h1p:'Part I is about today’s speakers & IEHO, Part II is Montréal fun facts. Easy ones — don’t panic.',
+  h2b:'15 seconds each — speed pays', h2p:'100 points per correct answer, plus a speed bonus (up to 200/question).',
+  h3b:'Claim your rank', h3p:'Live leaderboard. Top 3 gets bragging rights — and you’ll meet Dice, the star of this booth.',
+  whatLabel:'What is Dice',
+  pitch:'Dice is Montréal’s local social app: open-format, diverse events; hikes with live location sharing; an anonymous wall; real matches. Scan first, play, and you’ll get it.',
+  qrTxt:'Scan to get Dice<br>Dice — on the App Store',
+  p1Kicker:'PART I', p1Title:'Today’s stage,', p1Sub:'About today’s speakers & IEHO',
+  p2Kicker:'PART II', p2Title:'Montréal,', p2Sub:'Fun facts about the city',
+  qPart1:'PART I · TODAY', qPart2:'PART II · MONTRÉAL',
+  next:'Next', results:'Results', correct:' pts!', wrong:'Not quite', timeout:'Time’s up',
+  rKicker:'RESULTS', rankLabel:'Your rank',
+  ofTotal:(t)=>'out of '+t+' players', scoreLine:(n,s)=>n+' · Score '+s,
+  tier1:'👑 Champion of the night', tier3:'🏆 Podium finish', tier10:'✨ Top 10', tierElse:'Montréal awaits your revenge',
+  boardLabel:'Leaderboard · Top 10', offline:'(Local leaderboard · offline mode)',
+  aboutKicker:'ABOUT',
+  aboutPitch:'Dice is Montréal’s local social app — connecting events, friends and the city itself.',
+  feats:[
+   ['Open & Diverse Events','Anyone can host, any format goes — board games, city walks, movie nights, pop-ups.'],
+   ['Hiking · Live Location','Hike together with live location sharing — leave together, arrive together.'],
+   ['The Wall','Say it your way, signed or anonymous, and hear the city talk back.'],
+   ['Match','Start behind an avatar, end with a real friend.'],
+  ],
+  qrLabel:'Scan to join', qrTxt2:'Scan to get Dice<br>Dice — on the App Store',
+  again:'Next player',
+ }
+};
+
 // ------------------------------ questions ------------------------------
-const PART1 = {kicker:'PART I', title:'今日现场,', sub:'关于今天的嘉宾与 IEHO · Today’s speakers & IEHO'};
-const PART2 = {kicker:'PART II', title:'Montréal,', sub:'关于这座城市的冷知识 · Fun facts about the city'};
 const QUESTIONS = [
- {part:1, cn:'IEHO 的全称是什么？', en:'What does IEHO stand for?',
-  opts:['International Education Help Organisation','International Event Hosting Organisation','Institute of Elite Hiring Online','International Exchange & Help Office'],
-  ans:0, fact:'IEHO = International Education Help Organisation，微信公众号/小红书 @IEHO。'},
- {part:1, cn:'今天的主题演讲环节叫什么？', en:'What is today’s keynote format called?',
-  opts:['圆桌会议','真人图书馆 Living Library','电梯演讲','剧本杀'],
-  ans:1, fact:'2:15–3:45pm：每位嘉宾都是一本可以提问、可以聊天的"书"。'},
- {part:1, cn:'哪位嘉宾是 TELUS 的 AI 工程师？', en:'Which speaker is an AI Engineer at TELUS?',
-  opts:['李小茹 Xiaoru Li','Alex Ji','李若枫 Ruofeng Li','Janet Long'],
-  ans:2, fact:'李若枫毕业于 McGill 电气工程，还联合创立过 Awake AI，拿过 Dobson Cup 季军。'},
- {part:1, cn:'律师嘉宾 Xin Yue Zhang 成为律师前做过什么？', en:'Before becoming a lawyer, Xin Yue Zhang used to…',
-  opts:['当职业电竞选手','开网店、教日语和绘画','做米其林厨师','当健身教练'],
-  ans:1, fact:'如今在 McCarthy Tétrault LLP 地产与规划组执业（McGill 法学院 B.C.L. & J.D.）。'},
- {part:1, cn:'嘉宾李小茹的足迹遍布多少个国家？', en:'Speaker Xiaoru Li has travelled to how many countries?',
-  opts:['3+','10+','20+','30+'],
-  ans:3, fact:'30+ 个国家，CBRE Workplace Experience Host，精通英、法、普通话、粤语。'},
- {part:1, cn:'今天的冠名赞助商 Helix 金融，主打为留学生提供什么？', en:'Title sponsor Helix mainly offers students…',
-  opts:['奶茶优惠','保险保障','二手家具','代写简历'],
-  ans:1, fact:'Services Financiers Helix Inc.：留学生医疗险、探亲旅游险、超级签证险。'},
- {part:2, cn:'"Montréal" 的名字来源于？', en:'Montréal is named after…',
-  opts:['一位法国国王','Mont Royal 皇家山','一种奶酪','原住民语"下雪"'],
-  ans:1, fact:'1535 年 Jacques Cartier 登上这座山，命名 Mont Royal，城市因此得名。'},
- {part:2, cn:'蒙特利尔地铁最特别的地方是？', en:'What’s special about the Montréal metro?',
-  opts:['橡胶轮胎','24 小时运营','有海底隧道','车厢里有咖啡店'],
-  ans:0, fact:'1966 年通车，是世界上少数跑在橡胶轮胎上的地铁之一。'},
- {part:2, cn:'正宗 poutine 三件套：薯条、肉汁，还有？', en:'Real poutine = fries + gravy + …?',
-  opts:['马苏里拉碎','枫糖浆','奶酪凝乳 cheese curds','蛋黄酱'],
-  ans:2, fact:'新鲜的 cheese curds 咬下去要"吱吱作响"才算合格。'},
- {part:2, cn:'蒙特利尔地下城 RÉSO 大约有多长？', en:'How long is the RÉSO underground city?',
-  opts:['3 公里','13 公里','33 公里','330 公里'],
-  ans:2, fact:'约 33 公里，冬天不出地面就能逛 2000+ 家店铺。'},
- {part:2, cn:'蒙特利尔 bagel 和纽约 bagel 的最大区别？', en:'Montréal bagels vs New York bagels?',
-  opts:['更大更咸','蜂蜜水煮＋柴火烤，更小更甜','是方形的','只在冬天卖'],
-  ans:1, fact:'St-Viateur 和 Fairmount 两大门派为"谁更正宗"吵了几十年。'},
- {part:2, cn:'Mount Royal 山顶的著名地标是？', en:'The landmark on top of Mount Royal is…',
-  opts:['一座摩天轮','一座灯塔','一颗巨型骰子','一个大十字架'],
-  ans:3, fact:'1924 年立起的十字架，夜里会亮灯。至于巨型骰子——也许是 Dice 的下一场活动。'},
+ {part:1, ans:0,
+  zh:{q:'IEHO 的全称是什么？', opts:['International Education Help Organisation','International Event Hosting Organisation','Institute of Elite Hiring Online','International Exchange & Help Office'],
+      fact:'IEHO = International Education Help Organisation，微信公众号/小红书 @IEHO。'},
+  en:{q:'What does IEHO stand for?', opts:['International Education Help Organisation','International Event Hosting Organisation','Institute of Elite Hiring Online','International Exchange & Help Office'],
+      fact:'IEHO = International Education Help Organisation — find them @IEHO on WeChat & RED.'}},
+ {part:1, ans:1,
+  zh:{q:'今天的主题演讲环节叫什么？', opts:['圆桌会议','真人图书馆 Living Library','电梯演讲','剧本杀'],
+      fact:'2:15–3:45pm：每位嘉宾都是一本可以提问、可以聊天的"书"。'},
+  en:{q:'What is today’s keynote format called?', opts:['Round table','Living Library','Elevator pitch','Murder mystery'],
+      fact:'2:15–3:45pm — every speaker is a "book" you can chat with and question.'}},
+ {part:1, ans:2,
+  zh:{q:'哪位嘉宾是 TELUS 的 AI 工程师？', opts:['李小茹 Xiaoru Li','Alex Ji','李若枫 Ruofeng Li','Janet Long'],
+      fact:'李若枫毕业于 McGill 电气工程，还联合创立过 Awake AI，拿过 Dobson Cup 季军。'},
+  en:{q:'Which speaker is an AI Engineer at TELUS?', opts:['Xiaoru Li','Alex Ji','Ruofeng Li','Janet Long'],
+      fact:'Ruofeng Li (McGill EE) also co-founded Awake AI — Dobson Cup bronze.'}},
+ {part:1, ans:1,
+  zh:{q:'律师嘉宾 Xin Yue Zhang 成为律师前做过什么？', opts:['职业电竞选手','开网店、教日语和绘画','米其林厨师','健身教练'],
+      fact:'如今在 McCarthy Tétrault LLP 地产与规划组执业（McGill 法学院 B.C.L. & J.D.）。'},
+  en:{q:'Before becoming a lawyer, speaker Xin Yue Zhang used to…', opts:['Play esports professionally','Run an online shop & teach Japanese and drawing','Cook at a Michelin restaurant','Coach fitness'],
+      fact:'Now an Associate in Real Property & Planning at McCarthy Tétrault LLP (McGill B.C.L. & J.D.).'}},
+ {part:1, ans:3,
+  zh:{q:'嘉宾李小茹的足迹遍布多少个国家？', opts:['3+','10+','20+','30+'],
+      fact:'30+ 个国家，CBRE Workplace Experience Host，精通英、法、普通话、粤语。'},
+  en:{q:'Speaker Xiaoru Li has travelled to how many countries?', opts:['3+','10+','20+','30+'],
+      fact:'30+ countries — CBRE Workplace Experience Host, fluent in English, French, Mandarin & Cantonese.'}},
+ {part:1, ans:1,
+  zh:{q:'今天的冠名赞助商 Helix 金融，主打为留学生提供什么？', opts:['奶茶优惠','保险保障','二手家具','代写简历'],
+      fact:'Services Financiers Helix Inc.：留学生医疗险、探亲旅游险、超级签证险。'},
+  en:{q:'Title sponsor Helix mainly offers international students…', opts:['Bubble tea deals','Insurance coverage','Used furniture','Resume writing'],
+      fact:'Services Financiers Helix Inc. — student health, visitor & Super Visa insurance.'}},
+ {part:2, ans:1,
+  zh:{q:'"Montréal" 的名字来源于？', opts:['一位法国国王','Mont Royal 皇家山','一种奶酪','原住民语"下雪"'],
+      fact:'1535 年 Jacques Cartier 登上这座山，命名 Mont Royal，城市因此得名。'},
+  en:{q:'Montréal is named after…', opts:['A French king','Mont Royal','A type of cheese','An Indigenous word for “snow”'],
+      fact:'Jacques Cartier climbed the mountain in 1535 and named it Mont Royal.'}},
+ {part:2, ans:0,
+  zh:{q:'蒙特利尔地铁最特别的地方是？', opts:['橡胶轮胎','24 小时运营','有海底隧道','车厢里有咖啡店'],
+      fact:'1966 年通车，是世界上少数跑在橡胶轮胎上的地铁之一。'},
+  en:{q:'What’s special about the Montréal metro?', opts:['Rubber tires','Runs 24/7','An underwater tunnel','Coffee shops on board'],
+      fact:'Opened in 1966 — one of the few metros in the world running on rubber tires.'}},
+ {part:2, ans:2,
+  zh:{q:'正宗 poutine 三件套：薯条、肉汁，还有？', opts:['马苏里拉碎','枫糖浆','奶酪凝乳 cheese curds','蛋黄酱'],
+      fact:'新鲜的 cheese curds 咬下去要"吱吱作响"才算合格。'},
+  en:{q:'Real poutine = fries + gravy + …?', opts:['Shredded mozzarella','Maple syrup','Cheese curds','Mayo'],
+      fact:'Fresh curds should squeak when you bite them.'}},
+ {part:2, ans:2,
+  zh:{q:'蒙特利尔地下城 RÉSO 大约有多长？', opts:['3 公里','13 公里','33 公里','330 公里'],
+      fact:'约 33 公里，冬天不出地面就能逛 2000+ 家店铺。'},
+  en:{q:'How long is the RÉSO underground city?', opts:['3 km','13 km','33 km','330 km'],
+      fact:'About 33 km — 2000+ shops without ever going outside in winter.'}},
+ {part:2, ans:1,
+  zh:{q:'蒙特利尔 bagel 和纽约 bagel 的最大区别？', opts:['更大更咸','蜂蜜水煮＋柴火烤，更小更甜','是方形的','只在冬天卖'],
+      fact:'St-Viateur 和 Fairmount 两大门派为"谁更正宗"吵了几十年。'},
+  en:{q:'Montréal bagels vs New York bagels — the difference?', opts:['Bigger & saltier','Honey-boiled & wood-fired, smaller & sweeter','They’re square','Winter-only'],
+      fact:'St-Viateur vs Fairmount — a decades-old rivalry over the “real” bagel.'}},
+ {part:2, ans:3,
+  zh:{q:'Mount Royal 山顶的著名地标是？', opts:['一座摩天轮','一座灯塔','一颗巨型骰子','一个大十字架'],
+      fact:'1924 年立起的十字架，夜里会亮灯。至于巨型骰子——也许是 Dice 的下一场活动。'},
+  en:{q:'The landmark on top of Mount Royal is…', opts:['A Ferris wheel','A lighthouse','A giant dice','A giant illuminated cross'],
+      fact:'The cross went up in 1924 and lights up at night. A giant dice? Maybe our next event.'}},
 ];
 
 // ------------------------------ state ------------------------------
 const $ = id => document.getElementById(id);
 const TIME = 15;
 let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false, detail = [];
+
+function t(){ return T[L]; }
+
+function applyLang(){
+  document.documentElement.lang = L;
+  $('chipZh').classList.toggle('on', L==='zh');
+  $('chipEn').classList.toggle('on', L==='en');
+  $('wTag').textContent = t().tag;
+  $('wLangLabel').textContent = t().langLabel;
+  $('wNameLabel').textContent = t().nameLabel + (L==='zh' ? ' · Your name' : '');
+  $('uname').placeholder = t().nameHint;
+  $('btnStart').textContent = t().start;
+  $('wHowLabel').textContent = t().howLabel;
+  $('h1b').textContent = t().h1b; $('h1p').textContent = t().h1p;
+  $('h2b').textContent = t().h2b; $('h2p').textContent = t().h2p;
+  $('h3b').textContent = t().h3b; $('h3p').textContent = t().h3p;
+  $('wWhatLabel').textContent = t().whatLabel;
+  $('wPitch').textContent = t().pitch;
+  $('wQrTxt').innerHTML = t().qrTxt;
+}
+$('chipZh').onclick = () => { L='zh'; applyLang(); };
+$('chipEn').onclick = () => { L='en'; applyLang(); };
+applyLang();
 
 function show(id){
   ['scrWelcome','scrInter','scrQuiz','scrResult'].forEach(s => $(s).classList.add('hidden'));
@@ -244,34 +396,32 @@ $('btnStart').onclick = () => {
   const v = $('uname').value.trim();
   if(!v){ $('uname').focus(); return; }
   user = v; qi = 0; score = 0; detail = [];
-  interstitial(PART1, () => renderQ());
+  interstitial(1, () => renderQ());
 };
 
-function interstitial(p, next){
-  $('interKicker').textContent = p.kicker;
-  $('interTitle').textContent = p.title;
-  $('interSub').textContent = p.sub;
+function interstitial(part, next){
+  $('interKicker').textContent = part===1 ? t().p1Kicker : t().p2Kicker;
+  $('interTitle').textContent = part===1 ? t().p1Title : t().p2Title;
+  $('interSub').textContent = part===1 ? t().p1Sub : t().p2Sub;
   show('scrInter');
   setTimeout(next, 1600);
 }
 
 function renderQ(){
-  const q = QUESTIONS[qi];
+  const q = QUESTIONS[qi], loc = q[L];
   locked = false;
-  $('qPart').innerHTML = q.part === 1 ? 'PART I · 今日现场' : 'PART II · MONTRÉAL';
+  $('qPart').textContent = q.part === 1 ? t().qPart1 : t().qPart2;
   $('qScore').textContent = 'SCORE ' + score;
   $('qNum').textContent = String(qi+1).padStart(2,'0') + ' / ' + QUESTIONS.length;
-  $('qCn').textContent = q.cn;
-  $('qEn').textContent = q.en;
+  $('qCn').textContent = loc.q;
   $('qFact').classList.add('hidden');
   $('btnNext').classList.add('hidden');
   const box = $('qOpts'); box.innerHTML = '';
-  // shuffle options, remember where the answer lands
-  const order = q.opts.map((_,i)=>i).sort(()=>Math.random()-.5);
+  const order = loc.opts.map((_,i)=>i).sort(()=>Math.random()-.5);
   order.forEach((oi, slot) => {
     const b = document.createElement('button');
     b.className = 'opt';
-    b.innerHTML = '<span class="idx">' + ['a','b','c','d'][slot] + '.</span><span>' + q.opts[oi] + '</span>';
+    b.innerHTML = '<span class="idx">' + ['a','b','c','d'][slot] + '.</span><span>' + loc.opts[oi] + '</span>';
     b.onclick = () => pick(b, oi === q.ans, order, q);
     box.appendChild(b);
   });
@@ -301,7 +451,6 @@ function pick(btn, correct, order, q){
   if(correct) gained = 100 + Math.round(100 * left / TIME);
   score += gained;
   detail.push({q: qi, ok: correct, pts: gained});
-  // reveal
   const kids = [...$('qOpts').children];
   kids.forEach((k, slot) => {
     const oi = order[slot];
@@ -311,9 +460,10 @@ function pick(btn, correct, order, q){
     k.onclick = null;
   });
   $('qScore').textContent = 'SCORE ' + score;
-  $('qFact').textContent = (correct ? (gained + ' 分！ · ') : (btn ? '不对哦 · ' : '时间到 · ')) + q.fact;
+  const lead = correct ? ('+' + gained + t().correct) : (btn ? t().wrong : t().timeout);
+  $('qFact').textContent = lead + ' · ' + q[L].fact;
   $('qFact').classList.remove('hidden');
-  $('btnNext').textContent = qi === QUESTIONS.length - 1 ? '看成绩 — Results' : '下一题 — Next';
+  $('btnNext').textContent = qi === QUESTIONS.length - 1 ? t().results : t().next;
   $('btnNext').classList.remove('hidden');
 }
 
@@ -321,28 +471,51 @@ $('btnNext').onclick = () => {
   qi++;
   if(qi >= QUESTIONS.length){ finish(); return; }
   if(QUESTIONS[qi].part === 2 && QUESTIONS[qi-1].part === 1){
-    interstitial(PART2, () => renderQ());
+    interstitial(2, () => renderQ());
   } else renderQ();
 };
 
 // ------------------------------ results ------------------------------
+function tierText(rank){
+  if(rank === 1) return t().tier1;
+  if(rank <= 3) return t().tier3;
+  if(rank <= 10) return t().tier10;
+  return t().tierElse;
+}
+
 async function finish(){
-  $('rName').textContent = user;
-  $('rScore').textContent = score;
-  $('rRank').textContent = '';
+  $('rKicker').textContent = t().rKicker;
+  $('rRankLabel').textContent = t().rankLabel;
+  $('rBoardLabel').textContent = t().boardLabel;
+  $('rAboutKicker').textContent = t().aboutKicker;
+  $('rAboutPitch').textContent = t().aboutPitch;
+  $('rQrLabel').textContent = t().qrLabel;
+  $('rQrTxt').innerHTML = t().qrTxt2;
+  $('btnAgain').textContent = t().again;
+  const fx = $('rFeats'); fx.innerHTML = '';
+  t().feats.forEach((f,i) => {
+    const d = document.createElement('div');
+    d.className = 'feat';
+    d.innerHTML = '<div class="n">' + String(i+1).padStart(2,'0') + '</div><div><b>' + f[0] + '</b><p>' + f[1] + '</p></div>';
+    fx.appendChild(d);
+  });
+  $('rRankNum').textContent = '–';
+  $('rTier').textContent = '';
+  $('rOfTotal').textContent = '';
+  $('rScoreLine').textContent = t().scoreLine(user, score);
   $('rBoard').innerHTML = '';
   $('rNote').textContent = '';
   show('scrResult');
   let ok = false;
   try{
-    const sub = await rpc('quiz_submit_score', {p_name:user, p_score:score, p_detail:{d:detail}});
+    const sub = await rpc('quiz_submit_score', {p_name:user, p_score:score, p_detail:{d:detail, lang:L}});
     const lb = await rpc('quiz_leaderboard', {});
     if(sub && sub.ok && lb && lb.ok){
       ok = true;
-      $('rRank').innerHTML = '第 <b style="color:var(--gold)">' + sub.rank + '</b> 名 · 共 ' + sub.total + ' 位玩家';
+      setRank(sub.rank, sub.total);
       renderBoard(lb.top);
     }
-  }catch(e){ /* offline fallback below */ }
+  }catch(e){}
   if(!ok){
     const key = 'dice_quiz_lb';
     const arr = JSON.parse(localStorage.getItem(key) || '[]');
@@ -350,18 +523,27 @@ async function finish(){
     arr.sort((a,b)=>b.score-a.score);
     localStorage.setItem(key, JSON.stringify(arr.slice(0,50)));
     const rank = arr.findIndex(e => e.name===user && e.score===score) + 1;
-    $('rRank').innerHTML = '第 <b style="color:var(--gold)">' + rank + '</b> 名 · 共 ' + arr.length + ' 位玩家';
+    setRank(rank, arr.length);
     renderBoard(arr.slice(0,10));
-    $('rNote').textContent = '（本机排行榜 · offline mode）';
+    $('rNote').textContent = t().offline;
   }
+}
+
+function setRank(rank, total){
+  $('rRankNum').textContent = rank;
+  $('rTier').textContent = tierText(rank);
+  $('rOfTotal').textContent = t().ofTotal(total);
 }
 
 function renderBoard(top){
   const tb = $('rBoard'); tb.innerHTML = '';
+  const medals = ['👑','🥈','🥉'];
   top.forEach((e,i) => {
     const tr = document.createElement('tr');
-    if(e.name === user && e.score === score) tr.className = 'me';
-    tr.innerHTML = '<td class="r">' + String(i+1).padStart(2,'0') + '</td><td>' + esc(e.name) + '</td><td class="s">' + e.score + '</td>';
+    if(i < 3) tr.className = 'top3';
+    if(e.name === user && e.score === score) tr.className += ' me';
+    const m = i < 3 ? ' ' + medals[i] : '';
+    tr.innerHTML = '<td class="r">' + String(i+1).padStart(2,'0') + '</td><td>' + esc(e.name) + m + '</td><td class="s">' + e.score + '</td>';
     tb.appendChild(tr);
   });
 }
