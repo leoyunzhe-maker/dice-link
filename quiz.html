@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Dice × IEHO — Live Trivia</title>
+<style>
+  :root{
+    --paper:#f3eee4; --face:#f8f4ec; --ink:#3b3126; --gold:#a9885b;
+    --dim:#8b8272; --bad:#8a4a3a; --line:rgba(59,49,38,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:Georgia,'Times New Roman','Songti SC','SimSun',serif;
+    background-image:radial-gradient(ellipse 120% 90% at 50% 40%, rgba(0,0,0,0) 60%, rgba(74,62,46,.14) 100%);
+    min-height:100%;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:28px 22px 60px;min-height:100vh;display:flex;flex-direction:column}
+  .kicker{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:12px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--ink);font-weight:600}
+  .kicker .g{color:var(--gold)}
+  .rule{width:72px;height:2px;background:var(--gold);margin:18px 0}
+  h1.big{font-size:64px;line-height:1.02;font-weight:700;letter-spacing:-.01em}
+  .tag{font-style:italic;color:var(--dim);font-size:19px;margin-top:10px}
+  .label{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:11px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--dim);font-weight:600}
+  .card{background:var(--face);border:1px solid var(--line);border-radius:18px;padding:22px}
+  input[type=text]{
+    width:100%;background:transparent;border:0;border-bottom:2px solid var(--ink);
+    font-family:inherit;font-size:26px;color:var(--ink);padding:10px 2px;outline:none;border-radius:0;
+  }
+  input[type=text]::placeholder{color:#b6ac99;font-style:italic}
+  .btn{
+    display:block;width:100%;margin-top:26px;padding:17px;border:0;border-radius:14px;cursor:pointer;
+    background:var(--ink);color:var(--paper);font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;
+    font-size:14px;letter-spacing:.26em;text-transform:uppercase;font-weight:600;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+  .hidden{display:none!important}
+  /* quiz */
+  .qtop{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .qnum{font-style:italic;color:var(--gold);font-size:22px}
+  .timerline{height:3px;background:rgba(59,49,38,.16);border-radius:2px;overflow:hidden;margin:14px 0 26px}
+  .timerline i{display:block;height:100%;background:var(--gold);width:100%}
+  .qcn{font-size:27px;line-height:1.35;font-weight:700}
+  .qen{font-style:italic;color:var(--dim);font-size:15px;margin-top:8px;line-height:1.4}
+  .opts{margin-top:26px;display:grid;gap:12px}
+  .opt{
+    text-align:left;background:var(--face);border:1px solid var(--line);border-radius:14px;
+    padding:15px 16px;font-family:inherit;font-size:18px;color:var(--ink);cursor:pointer;line-height:1.35;
+    display:flex;gap:12px;align-items:baseline;
+  }
+  .opt .idx{font-style:italic;color:var(--gold);font-size:15px;min-width:20px}
+  .opt.correct{background:var(--gold);border-color:var(--gold);color:#fff}
+  .opt.correct .idx{color:#fff}
+  .opt.wrong{background:var(--bad);border-color:var(--bad);color:#fff}
+  .opt.wrong .idx{color:#fff}
+  .opt.dis{opacity:.45}
+  .fact{margin-top:20px;padding:14px 16px;border-left:3px solid var(--gold);color:var(--dim);
+    font-size:15px;line-height:1.55;font-style:italic}
+  .scorepill{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:12px;
+    letter-spacing:.18em;color:var(--dim);font-weight:600}
+  /* interstitial */
+  .inter{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+  .inter h2{font-size:52px;line-height:1.05}
+  /* results */
+  .bigscore{font-size:86px;line-height:1;font-weight:700}
+  .ranks{font-size:22px;margin-top:8px}
+  table.lb{width:100%;border-collapse:collapse;margin-top:14px}
+  table.lb td{padding:10px 4px;border-bottom:1px solid rgba(59,49,38,.15);font-size:17px}
+  table.lb td.r{font-style:italic;color:var(--gold);width:36px}
+  table.lb td.s{text-align:right;font-variant-numeric:tabular-nums}
+  table.lb tr.me td{font-weight:700;background:rgba(169,136,91,.12)}
+  .divider{height:1px;background:var(--line);margin:36px 0 28px;position:relative}
+  .divider::after{content:'◆';position:absolute;left:50%;top:-9px;transform:translateX(-50%);
+    color:var(--gold);font-size:11px;background:var(--paper);padding:0 10px}
+  .feat{display:flex;gap:14px;margin-top:18px;align-items:baseline}
+  .feat .n{font-style:italic;color:var(--gold);font-size:19px;min-width:34px}
+  .feat b{font-size:18px}
+  .feat p{color:var(--dim);font-size:14.5px;margin-top:3px;line-height:1.5}
+  .qrrow{display:flex;gap:20px;align-items:center;margin-top:28px}
+  .qrrow img{width:132px;height:132px;border:1px solid var(--line);border-radius:14px;background:var(--face);padding:8px}
+  .vfoot{margin-top:auto;padding-top:36px;text-align:center}
+  .vfoot span{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:10px;
+    letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+  @media (max-width:420px){ h1.big{font-size:52px} .qcn{font-size:23px} .bigscore{font-size:70px} }
+</style>
+</head>
+<body>
+
+<!-- ============ WELCOME ============ -->
+<div class="wrap" id="scrWelcome">
+  <div class="kicker">IEHO × <span class="g">DICE</span> — LIVE TRIVIA · 现场问答</div>
+  <div style="margin-top:64px">
+    <h1 class="big">Dice,</h1>
+    <div class="rule"></div>
+    <div class="tag">Meet Montréal, one roll at a time.</div>
+  </div>
+  <div class="card" style="margin-top:48px">
+    <div class="label" style="margin-bottom:14px">你的名字 · Your name</div>
+    <input type="text" id="uname" maxlength="24" placeholder="e.g. 小骰子" autocomplete="off">
+    <button class="btn" id="btnStart">开始 — Start</button>
+  </div>
+  <div style="margin-top:26px;color:var(--dim);font-size:14.5px;line-height:1.7">
+    两个部分共 12 题：<i>Part I</i> 今日嘉宾与 IEHO · <i>Part II</i> Montréal 冷知识。<br>
+    每题 15 秒，答得越快分越高。答完看排名，冲榜！
+  </div>
+  <div class="vfoot"><span>Dice MTL — EST. 2026 · Montréal</span></div>
+</div>
+
+<!-- ============ INTERSTITIAL ============ -->
+<div class="wrap hidden" id="scrInter">
+  <div class="inter">
+    <div class="kicker" id="interKicker">PART I</div>
+    <h2 id="interTitle" style="margin-top:18px">今日现场,</h2>
+    <div class="rule"></div>
+    <div class="tag" id="interSub">关于今天的嘉宾与 IEHO</div>
+  </div>
+</div>
+
+<!-- ============ QUIZ ============ -->
+<div class="wrap hidden" id="scrQuiz">
+  <div class="qtop">
+    <div class="kicker" id="qPart">PART I · 今日现场</div>
+    <div class="scorepill" id="qScore">SCORE 0</div>
+  </div>
+  <div class="qtop">
+    <div class="qnum" id="qNum">01 / 12</div>
+    <div class="scorepill" id="qTime">15s</div>
+  </div>
+  <div class="timerline"><i id="qBar"></i></div>
+  <div class="qcn" id="qCn"></div>
+  <div class="qen" id="qEn"></div>
+  <div class="opts" id="qOpts"></div>
+  <div class="fact hidden" id="qFact"></div>
+  <button class="btn hidden" id="btnNext">下一题 — Next</button>
+</div>
+
+<!-- ============ RESULTS ============ -->
+<div class="wrap hidden" id="scrResult">
+  <div class="kicker">RESULTS · <span class="g">成绩单</span></div>
+  <div style="margin-top:40px">
+    <div class="label">Final score · <span id="rName"></span></div>
+    <div class="bigscore" id="rScore">0</div>
+    <div class="ranks" id="rRank"></div>
+    <div class="rule"></div>
+  </div>
+  <div>
+    <div class="label" style="margin:10px 0 2px">Leaderboard · 排行榜</div>
+    <table class="lb" id="rBoard"></table>
+    <div id="rNote" style="color:var(--dim);font-size:13px;margin-top:8px;font-style:italic"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="kicker">ABOUT — <span class="g">关于</span></div>
+  <h1 class="big" style="font-size:52px;margin-top:12px">Dice,</h1>
+  <div class="tag">Dice 是一款属于蒙特利尔的本地社交 App——把线下活动、朋友和这座城市连在一起。</div>
+  <div style="margin-top:10px">
+    <div class="feat"><div class="n">01</div><div><b>活动与集章 · Events &amp; Stamps</b><p>发现身边的线下活动，扫码集章、解锁抽奖。Discover happenings, collect stamps, unlock the draw.</p></div></div>
+    <div class="feat"><div class="n">02</div><div><b>墙 · The Wall</b><p>实名或匿名，把想说的话留在墙上。Say it your way — signed or anonymous.</p></div></div>
+    <div class="feat"><div class="n">03</div><div><b>匹配 · Match</b><p>从虚拟头像开始的对话，变成现实中真正的朋友。Start behind an avatar, end with a real friend.</p></div></div>
+  </div>
+  <div class="qrrow">
+    <img alt="App Store QR" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPgAAAD4CAIAAABOs7xcAAAE1klEQVR4nO3dMW5cNxRAUSnwqgKkmnVPFSCrUalCZVYwAYiQJjn3nNbG+I98QRjv0+Tnz/fXB7y7P3Y/APwOQidB6CQInQShkyB0EoROwq9Xv/D468+PGzz//mfK849+zqvfP2r083d9r8flPVjRSRA6CUInQegkCJ0EoZMgdNpz9FdmzY9HzZofjxr9nNOec/V7gOclPVjRSRA6CUInQegkCJ0EoZMgdBKG5+ivzNqvvHouu2v/9+jz7Ppez8X77EfNeh4rOglCJ0HoJAidBKGTIHQShE7CtDn6aXbNcUfn06vn1qvn5bewopMgdBKEToLQSRA6CUInQegkvO0cfZbTzkcfVZuXv2JFJ0HoJAidBKGTIHQShE6C0EmYNke/ZV67+t7NXb//lV370Z+H9WBFJ0HoJAidBKGTIHQShE6C0En4teu8FH6PXXP601jRSRA6CUInQegkCJ0EoZMgdD4+f76/Pt7R6vnuu86bn4ftI5/Fik6C0EkQOglCJ0HoJAidBKHTnqOfdi747XNoc/3/tvq8Gis6CUInQegkCJ0EoZMgdBKETsK089FnzYlPO3d81vdafb7KrOd5ZfXPbfV7Bis6CUInQegkCJ0EoZMgdBKETnuOPmuOe/v+9dPOOdl1/+jzkh5esaKTIHQShE6C0EkQOglCJ0HotOfoq/cHj37+6jnuu55jc8v+/ufin4MVnQShkyB0EoROgtBJEDoJQidh+FyX0Xnnafun3/Vc9lGPTd9r1752KzoJQidB6CQInQShkyB0EoROwvA9o6/csl/59ufc5XHJ+wT3jJLmny4kCJ0EoZMgdBKEToLQSTjuntHVn7/r3tBZdp0/M2rXe49XrOgkCJ0EoZMgdBKEToLQSRA6CdPOdXll132fp53fMus8nFG75tan9WNFJ0HoJAidBKGTIHQShE6C0GnP0U+bW582577l3JXV59k/Ljln3YpOgtBJEDoJQidB6CQInQSh056jr74f9Jb5/Syn7Qsftfq9x+q/dys6CUInQegkCJ0EoZMgdBKETsK0/eijn7N6Lrvr3tBZ8+Bb3g/c8j7Eik6C0EkQOglCJ0HoJAidBKGTMO2e0dX3XJ527squc75Pm5fPsvr9gBWdBKGTIHQShE6C0EkQOglCJ+Hz5/try72St++3Ps3tP7enc13g//NPFxKEToLQSRA6CUInQei05+i3u2Vf+2nvE56b/l/B6s+3opMgdBKEToLQSRA6CUInQegkDN8zeppdc+7TrJ67Py65d/YVKzoJQidB6CQInQShkyB0EoROwq/T5tar56+33D866pZ96s9Nn2NFJ0HoJAidBKGTIHQShE6C0EmYds/o6vPUb3+e094b7JrH73ovYUUnQegkCJ0EoZMgdBKEToLQSZg2Rz/N6Fx21rx21jx79Xkpo3btv5/151rRSRA6CUInQegkCJ0EoZMgdBLedo6+2q5926s9J703OO17WdFJEDoJQidB6CQInQShkyB0EqbN0XedfzJq137xWVbf9/nY9HNYfU+qFZ0EoZMgdBKEToLQSRA6CUInYXiOvms/8ep5865z2Vefa756f/kt955a0UkQOglCJ0HoJAidBKGTIHQSPn++v3Y/AyxnRSdB6CQInQShkyB0EoROgtD5KPgXbSEUwpM2ONYAAAAASUVORK5CYII=">
+    <div>
+      <div class="label" style="margin-bottom:8px">Scan to join</div>
+      <div style="font-size:15px;color:var(--dim);line-height:1.6">扫码下载 Dice<br>Dice — on the App Store</div>
+    </div>
+  </div>
+  <button class="btn ghost" id="btnAgain" style="margin-top:34px">下一位玩家 — Next player</button>
+  <div class="vfoot"><span>Events · Friends · Montréal</span></div>
+</div>
+
+<script>
+// ------- leaderboard backend (same Supabase project as the stamp rally) -------
+const SB = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
+const SB_KEY = 'sb_publishable_jLnIwihvXh5-fhcbWUoj1w_bL7j7DzA';
+async function rpc(fn, args){
+  const r = await fetch(SB + fn, {method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body: JSON.stringify(args||{})});
+  if(!r.ok) throw new Error('rpc '+r.status);
+  return await r.json();
+}
+
+// ------------------------------ questions ------------------------------
+const PART1 = {kicker:'PART I', title:'今日现场,', sub:'关于今天的嘉宾与 IEHO · Today’s speakers & IEHO'};
+const PART2 = {kicker:'PART II', title:'Montréal,', sub:'关于这座城市的冷知识 · Fun facts about the city'};
+const QUESTIONS = [
+ {part:1, cn:'IEHO 的全称是什么？', en:'What does IEHO stand for?',
+  opts:['International Education Help Organisation','International Event Hosting Organisation','Institute of Elite Hiring Online','International Exchange & Help Office'],
+  ans:0, fact:'IEHO = International Education Help Organisation，微信公众号/小红书 @IEHO。'},
+ {part:1, cn:'今天的主题演讲环节叫什么？', en:'What is today’s keynote format called?',
+  opts:['圆桌会议','真人图书馆 Living Library','电梯演讲','剧本杀'],
+  ans:1, fact:'2:15–3:45pm：每位嘉宾都是一本可以提问、可以聊天的"书"。'},
+ {part:1, cn:'哪位嘉宾是 TELUS 的 AI 工程师？', en:'Which speaker is an AI Engineer at TELUS?',
+  opts:['李小茹 Xiaoru Li','Alex Ji','李若枫 Ruofeng Li','Janet Long'],
+  ans:2, fact:'李若枫毕业于 McGill 电气工程，还联合创立过 Awake AI，拿过 Dobson Cup 季军。'},
+ {part:1, cn:'律师嘉宾 Xin Yue Zhang 成为律师前做过什么？', en:'Before becoming a lawyer, Xin Yue Zhang used to…',
+  opts:['当职业电竞选手','开网店、教日语和绘画','做米其林厨师','当健身教练'],
+  ans:1, fact:'如今在 McCarthy Tétrault LLP 地产与规划组执业（McGill 法学院 B.C.L. & J.D.）。'},
+ {part:1, cn:'嘉宾李小茹的足迹遍布多少个国家？', en:'Speaker Xiaoru Li has travelled to how many countries?',
+  opts:['3+','10+','20+','30+'],
+  ans:3, fact:'30+ 个国家，CBRE Workplace Experience Host，精通英、法、普通话、粤语。'},
+ {part:1, cn:'今天的冠名赞助商 Helix 金融，主打为留学生提供什么？', en:'Title sponsor Helix mainly offers students…',
+  opts:['奶茶优惠','保险保障','二手家具','代写简历'],
+  ans:1, fact:'Services Financiers Helix Inc.：留学生医疗险、探亲旅游险、超级签证险。'},
+ {part:2, cn:'"Montréal" 的名字来源于？', en:'Montréal is named after…',
+  opts:['一位法国国王','Mont Royal 皇家山','一种奶酪','原住民语"下雪"'],
+  ans:1, fact:'1535 年 Jacques Cartier 登上这座山，命名 Mont Royal，城市因此得名。'},
+ {part:2, cn:'蒙特利尔地铁最特别的地方是？', en:'What’s special about the Montréal metro?',
+  opts:['橡胶轮胎','24 小时运营','有海底隧道','车厢里有咖啡店'],
+  ans:0, fact:'1966 年通车，是世界上少数跑在橡胶轮胎上的地铁之一。'},
+ {part:2, cn:'正宗 poutine 三件套：薯条、肉汁，还有？', en:'Real poutine = fries + gravy + …?',
+  opts:['马苏里拉碎','枫糖浆','奶酪凝乳 cheese curds','蛋黄酱'],
+  ans:2, fact:'新鲜的 cheese curds 咬下去要"吱吱作响"才算合格。'},
+ {part:2, cn:'蒙特利尔地下城 RÉSO 大约有多长？', en:'How long is the RÉSO underground city?',
+  opts:['3 公里','13 公里','33 公里','330 公里'],
+  ans:2, fact:'约 33 公里，冬天不出地面就能逛 2000+ 家店铺。'},
+ {part:2, cn:'蒙特利尔 bagel 和纽约 bagel 的最大区别？', en:'Montréal bagels vs New York bagels?',
+  opts:['更大更咸','蜂蜜水煮＋柴火烤，更小更甜','是方形的','只在冬天卖'],
+  ans:1, fact:'St-Viateur 和 Fairmount 两大门派为"谁更正宗"吵了几十年。'},
+ {part:2, cn:'Mount Royal 山顶的著名地标是？', en:'The landmark on top of Mount Royal is…',
+  opts:['一座摩天轮','一座灯塔','一颗巨型骰子','一个大十字架'],
+  ans:3, fact:'1924 年立起的十字架，夜里会亮灯。至于巨型骰子——也许是 Dice 的下一场活动。'},
+];
+
+// ------------------------------ state ------------------------------
+const $ = id => document.getElementById(id);
+const TIME = 15;
+let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false, detail = [];
+
+function show(id){
+  ['scrWelcome','scrInter','scrQuiz','scrResult'].forEach(s => $(s).classList.add('hidden'));
+  $(id).classList.remove('hidden');
+  window.scrollTo(0,0);
+}
+
+$('btnStart').onclick = () => {
+  const v = $('uname').value.trim();
+  if(!v){ $('uname').focus(); return; }
+  user = v; qi = 0; score = 0; detail = [];
+  interstitial(PART1, () => renderQ());
+};
+
+function interstitial(p, next){
+  $('interKicker').textContent = p.kicker;
+  $('interTitle').textContent = p.title;
+  $('interSub').textContent = p.sub;
+  show('scrInter');
+  setTimeout(next, 1600);
+}
+
+function renderQ(){
+  const q = QUESTIONS[qi];
+  locked = false;
+  $('qPart').innerHTML = q.part === 1 ? 'PART I · 今日现场' : 'PART II · MONTRÉAL';
+  $('qScore').textContent = 'SCORE ' + score;
+  $('qNum').textContent = String(qi+1).padStart(2,'0') + ' / ' + QUESTIONS.length;
+  $('qCn').textContent = q.cn;
+  $('qEn').textContent = q.en;
+  $('qFact').classList.add('hidden');
+  $('btnNext').classList.add('hidden');
+  const box = $('qOpts'); box.innerHTML = '';
+  // shuffle options, remember where the answer lands
+  const order = q.opts.map((_,i)=>i).sort(()=>Math.random()-.5);
+  order.forEach((oi, slot) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = '<span class="idx">' + ['a','b','c','d'][slot] + '.</span><span>' + q.opts[oi] + '</span>';
+    b.onclick = () => pick(b, oi === q.ans, order, q);
+    box.appendChild(b);
+  });
+  show('scrQuiz');
+  startTimer(q, order);
+}
+
+function startTimer(q, order){
+  t0 = performance.now();
+  cancelAnimationFrame(timer);
+  const tick = () => {
+    const left = Math.max(0, TIME - (performance.now() - t0)/1000);
+    $('qBar').style.width = (left/TIME*100) + '%';
+    $('qTime').textContent = Math.ceil(left) + 's';
+    if(left <= 0){ if(!locked) pick(null, false, order, q); return; }
+    timer = requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+function pick(btn, correct, order, q){
+  if(locked) return;
+  locked = true;
+  cancelAnimationFrame(timer);
+  const left = Math.max(0, TIME - (performance.now() - t0)/1000);
+  let gained = 0;
+  if(correct) gained = 100 + Math.round(100 * left / TIME);
+  score += gained;
+  detail.push({q: qi, ok: correct, pts: gained});
+  // reveal
+  const kids = [...$('qOpts').children];
+  kids.forEach((k, slot) => {
+    const oi = order[slot];
+    if(oi === q.ans) k.classList.add('correct');
+    else if(k === btn) k.classList.add('wrong');
+    else k.classList.add('dis');
+    k.onclick = null;
+  });
+  $('qScore').textContent = 'SCORE ' + score;
+  $('qFact').textContent = (correct ? (gained + ' 分！ · ') : (btn ? '不对哦 · ' : '时间到 · ')) + q.fact;
+  $('qFact').classList.remove('hidden');
+  $('btnNext').textContent = qi === QUESTIONS.length - 1 ? '看成绩 — Results' : '下一题 — Next';
+  $('btnNext').classList.remove('hidden');
+}
+
+$('btnNext').onclick = () => {
+  qi++;
+  if(qi >= QUESTIONS.length){ finish(); return; }
+  if(QUESTIONS[qi].part === 2 && QUESTIONS[qi-1].part === 1){
+    interstitial(PART2, () => renderQ());
+  } else renderQ();
+};
+
+// ------------------------------ results ------------------------------
+async function finish(){
+  $('rName').textContent = user;
+  $('rScore').textContent = score;
+  $('rRank').textContent = '';
+  $('rBoard').innerHTML = '';
+  $('rNote').textContent = '';
+  show('scrResult');
+  let ok = false;
+  try{
+    const sub = await rpc('quiz_submit_score', {p_name:user, p_score:score, p_detail:{d:detail}});
+    const lb = await rpc('quiz_leaderboard', {});
+    if(sub && sub.ok && lb && lb.ok){
+      ok = true;
+      $('rRank').innerHTML = '第 <b style="color:var(--gold)">' + sub.rank + '</b> 名 · 共 ' + sub.total + ' 位玩家';
+      renderBoard(lb.top);
+    }
+  }catch(e){ /* offline fallback below */ }
+  if(!ok){
+    const key = 'dice_quiz_lb';
+    const arr = JSON.parse(localStorage.getItem(key) || '[]');
+    arr.push({name:user, score:score});
+    arr.sort((a,b)=>b.score-a.score);
+    localStorage.setItem(key, JSON.stringify(arr.slice(0,50)));
+    const rank = arr.findIndex(e => e.name===user && e.score===score) + 1;
+    $('rRank').innerHTML = '第 <b style="color:var(--gold)">' + rank + '</b> 名 · 共 ' + arr.length + ' 位玩家';
+    renderBoard(arr.slice(0,10));
+    $('rNote').textContent = '（本机排行榜 · offline mode）';
+  }
+}
+
+function renderBoard(top){
+  const tb = $('rBoard'); tb.innerHTML = '';
+  top.forEach((e,i) => {
+    const tr = document.createElement('tr');
+    if(e.name === user && e.score === score) tr.className = 'me';
+    tr.innerHTML = '<td class="r">' + String(i+1).padStart(2,'0') + '</td><td>' + esc(e.name) + '</td><td class="s">' + e.score + '</td>';
+    tb.appendChild(tr);
+  });
+}
+function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+$('btnAgain').onclick = () => { $('uname').value=''; show('scrWelcome'); $('uname').focus(); };
+</script>
+</body>
+</html>
