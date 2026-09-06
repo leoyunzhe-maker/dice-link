@@ -14,10 +14,17 @@
   body{
     background:var(--paper); color:var(--ink);
     font-family:Georgia,'Times New Roman','Songti SC','SimSun',serif;
-    background-image:radial-gradient(ellipse 120% 90% at 50% 40%, rgba(0,0,0,0) 60%, rgba(74,62,46,.14) 100%);
-    min-height:100%;
+    min-height:100%; overflow-x:hidden;
   }
-  .wrap{max-width:680px;margin:0 auto;padding:28px 22px 60px;min-height:100vh;display:flex;flex-direction:column}
+  /* --- Montréal street-map background layer --- */
+  #bgmap{position:fixed;inset:-80px;z-index:0;pointer-events:none;opacity:.10;
+    animation:mapdrift 80s ease-in-out infinite alternate}
+  #bgmap svg{width:100%;height:100%}
+  @keyframes mapdrift{from{transform:translate(0,0)}to{transform:translate(-46px,-30px)}}
+  #bgvig{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(ellipse 120% 90% at 50% 40%, rgba(0,0,0,0) 55%, rgba(74,62,46,.16) 100%)}
+  .wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:28px 22px 60px;
+    min-height:100vh;display:flex;flex-direction:column}
   .kicker{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:12px;letter-spacing:.32em;
     text-transform:uppercase;color:var(--ink);font-weight:600}
   .kicker .g{color:var(--gold)}
@@ -39,7 +46,23 @@
   }
   .btn:active{transform:translateY(1px)}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+  .btn.pulse{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(169,136,91,.45)}
+    50%{transform:scale(1.02);box-shadow:0 0 0 12px rgba(169,136,91,0)}}
   .hidden{display:none!important}
+  /* hero die animation */
+  .hero{position:relative}
+  .heroDie{position:absolute;right:6px;top:-6px;width:92px;height:92px;animation:tumble 7s ease-in-out infinite}
+  .heroDie .dface{width:100%;height:100%;background:var(--face);border:2px solid var(--ink);border-radius:22px;
+    position:relative;box-shadow:0 10px 18px rgba(59,49,38,.14)}
+  .heroDie i{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--ink)}
+  .heroDie i.g{background:var(--gold)}
+  @keyframes tumble{0%,100%{transform:rotate(-9deg) translateY(0)}25%{transform:rotate(4deg) translateY(-7px)}
+    50%{transform:rotate(11deg) translateY(2px)}75%{transform:rotate(-3deg) translateY(-5px)}}
+  /* rotating tagline */
+  .tagswap{position:relative;min-height:56px}
+  .tagswap .tag{position:absolute;left:0;right:0;top:0;opacity:0;transition:opacity .9s;margin-top:10px}
+  .tagswap .tag.on{opacity:1}
   /* language chips */
   .langrow{display:flex;gap:10px;margin-bottom:18px}
   .chip{
@@ -108,18 +131,27 @@
   .vfoot{margin-top:auto;padding-top:36px;text-align:center}
   .vfoot span{font-family:'Avenir Next','Helvetica Neue',Arial,sans-serif;font-size:10px;
     letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
-  @media (max-width:420px){ h1.big{font-size:48px} .qcn{font-size:22px} .rankhero .num{font-size:120px} }
+  @media (max-width:420px){ h1.big{font-size:48px} .qcn{font-size:22px} .rankhero .num{font-size:120px}
+    .heroDie{width:74px;height:74px;right:0} }
 </style>
 </head>
 <body>
 
+<div id="bgmap"></div>
+<div id="bgvig"></div>
+
 <!-- ============ WELCOME ============ -->
 <div class="wrap" id="scrWelcome">
   <div class="kicker">IEHO × <span class="g">DICE</span> — LIVE TRIVIA</div>
-  <div style="margin-top:40px">
+  <div class="hero" style="margin-top:40px">
+    <div class="heroDie"><div class="dface">
+      <i style="left:16%;top:16%"></i><i style="right:16%;top:16%"></i>
+      <i class="g" style="left:50%;top:50%;transform:translate(-50%,-50%)"></i>
+      <i style="left:16%;bottom:16%"></i><i style="right:16%;bottom:16%"></i>
+    </div></div>
     <h1 class="big">Dice,</h1>
     <div class="rule"></div>
-    <div class="tag" id="wTag"></div>
+    <div class="tagswap" id="wTags"></div>
   </div>
 
   <div class="card" style="margin-top:30px">
@@ -130,7 +162,7 @@
     </div>
     <div class="label" style="margin-bottom:10px" id="wNameLabel"></div>
     <input type="text" id="uname" maxlength="24" autocomplete="off">
-    <button class="btn" id="btnStart"></button>
+    <button class="btn pulse" id="btnStart"></button>
   </div>
 
   <div style="margin-top:30px">
@@ -173,7 +205,7 @@
     <div class="scorepill" id="qScore">SCORE 0</div>
   </div>
   <div class="qtop">
-    <div class="qnum" id="qNum">01 / 12</div>
+    <div class="qnum" id="qNum">01 / 14</div>
     <div class="scorepill" id="qTime">15s</div>
   </div>
   <div class="timerline"><i id="qBar"></i></div>
@@ -199,7 +231,6 @@
   <div style="margin-top:26px">
     <div class="label" id="rBoardLabel"></div>
     <table class="lb" id="rBoard"></table>
-    <div id="rNote" style="color:var(--dim);font-size:13px;margin-top:8px;font-style:italic"></div>
   </div>
 
   <div class="divider"></div>
@@ -220,38 +251,27 @@
 </div>
 
 <script>
-// ------- leaderboard backend (same Supabase project as the stamp rally) -------
-const SB = 'https://noyyqwifmucfliumkcgt.supabase.co/rest/v1/rpc/';
-const SB_KEY = 'sb_publishable_jLnIwihvXh5-fhcbWUoj1w_bL7j7DzA';
-async function rpc(fn, args){
-  const r = await fetch(SB + fn, {method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-    body: JSON.stringify(args||{})});
-  if(!r.ok) throw new Error('rpc '+r.status);
-  return await r.json();
-}
-
 // ------------------------------ i18n ------------------------------
 let L = 'zh';
 const T = {
  zh:{
-  tag:'蒙特利尔本地社交 App 现场问答——答题、冲榜、认识 Dice。',
+  tags:['蒙特利尔本地社交 App 现场问答——答题、冲榜、认识 Dice。','12+2 道题，15 秒一题，手快分高。敢来吗？','冲进前三，全场都会看到你的名字。'],
   langLabel:'语言 · Language', nameLabel:'你的名字', nameHint:'e.g. 小骰子', start:'开始挑战',
   howLabel:'怎么玩 · How to play',
-  h1b:'回答 12 道选择题', h1p:'Part I 关于今天的嘉宾与 IEHO，Part II 关于蒙特利尔的冷知识。都很简单，别慌。',
+  h1b:'回答 14 道选择题', h1p:'Part I 关于今天的赞助商、嘉宾与 IEHO，Part II 关于蒙特利尔的冷知识。都很简单，别慌。',
   h2b:'每题 15 秒，手快分高', h2p:'答对得 100 分，剩余时间越多加成越高（最多 200 分/题）。',
-  h3b:'答完看排名', h3p:'实时排行榜，冲进前三很有排面。顺便认识一下 Dice——今天摊位的主角。',
+  h3b:'答完看排名', h3p:'排行榜就在这台 iPad 上，冲进前三很有排面。顺便认识一下 Dice——今天摊位的主角。',
   whatLabel:'这是什么 · What is Dice',
   pitch:'Dice 是蒙特利尔的本地社交 App：开放式多样化活动、结伴 hiking 位置分享、匿名的墙、真实的匹配。先扫码装上，答完题你就懂了。',
   qrTxt:'扫码下载 Dice<br>Dice — on the App Store',
-  p1Kicker:'PART I', p1Title:'今日现场,', p1Sub:'关于今天的嘉宾与 IEHO',
+  p1Kicker:'PART I', p1Title:'今日现场,', p1Sub:'关于赞助商、嘉宾与 IEHO',
   p2Kicker:'PART II', p2Title:'Montréal,', p2Sub:'关于这座城市的冷知识',
   qPart1:'PART I · 今日现场', qPart2:'PART II · MONTRÉAL',
   next:'下一题', results:'看成绩', correct:'分！', wrong:'不对哦', timeout:'时间到',
   rKicker:'RESULTS · 成绩单', rankLabel:'你的名次 · Your rank',
   ofTotal:(t)=>'共 '+t+' 位挑战者', scoreLine:(n,s)=>n+' · 总分 '+s,
   tier1:'👑 全场之王', tier3:'🏆 登上领奖台', tier10:'✨ 挤进前十', tierElse:'继续修行，蒙特利尔等你',
-  boardLabel:'排行榜 · Top 10', offline:'（本机排行榜 · 未连接网络）',
+  boardLabel:'排行榜 · Top 10',
   aboutKicker:'ABOUT — 关于',
   aboutPitch:'Dice 是一款属于蒙特利尔的本地社交 App——把线下活动、朋友和这座城市连在一起。',
   feats:[
@@ -264,23 +284,23 @@ const T = {
   again:'下一位玩家',
  },
  en:{
-  tag:'Live trivia by Montréal’s local social app — play, rank up, meet Dice.',
+  tags:['Live trivia by Montréal’s local social app — play, rank up, meet Dice.','14 questions, 15 seconds each. Speed pays. Dare to try?','Crack the top 3 and everyone sees your name.'],
   langLabel:'Language · 语言', nameLabel:'Your name', nameHint:'e.g. Lucky Dice', start:'Start',
   howLabel:'How to play',
-  h1b:'Answer 12 quick questions', h1p:'Part I is about today’s speakers & IEHO, Part II is Montréal fun facts. Easy ones — don’t panic.',
+  h1b:'Answer 14 quick questions', h1p:'Part I covers today’s sponsor, speakers & IEHO; Part II is Montréal fun facts. Easy ones — don’t panic.',
   h2b:'15 seconds each — speed pays', h2p:'100 points per correct answer, plus a speed bonus (up to 200/question).',
-  h3b:'Claim your rank', h3p:'Live leaderboard. Top 3 gets bragging rights — and you’ll meet Dice, the star of this booth.',
+  h3b:'Claim your rank', h3p:'The leaderboard lives on this iPad. Top 3 gets bragging rights — and you’ll meet Dice, the star of this booth.',
   whatLabel:'What is Dice',
   pitch:'Dice is Montréal’s local social app: open-format, diverse events; hikes with live location sharing; an anonymous wall; real matches. Scan first, play, and you’ll get it.',
   qrTxt:'Scan to get Dice<br>Dice — on the App Store',
-  p1Kicker:'PART I', p1Title:'Today’s stage,', p1Sub:'About today’s speakers & IEHO',
+  p1Kicker:'PART I', p1Title:'Today’s stage,', p1Sub:'About the sponsor, speakers & IEHO',
   p2Kicker:'PART II', p2Title:'Montréal,', p2Sub:'Fun facts about the city',
   qPart1:'PART I · TODAY', qPart2:'PART II · MONTRÉAL',
   next:'Next', results:'Results', correct:' pts!', wrong:'Not quite', timeout:'Time’s up',
   rKicker:'RESULTS', rankLabel:'Your rank',
   ofTotal:(t)=>'out of '+t+' players', scoreLine:(n,s)=>n+' · Score '+s,
   tier1:'👑 Champion of the night', tier3:'🏆 Podium finish', tier10:'✨ Top 10', tierElse:'Montréal awaits your revenge',
-  boardLabel:'Leaderboard · Top 10', offline:'(Local leaderboard · offline mode)',
+  boardLabel:'Leaderboard · Top 10',
   aboutKicker:'ABOUT',
   aboutPitch:'Dice is Montréal’s local social app — connecting events, friends and the city itself.',
   feats:[
@@ -296,6 +316,16 @@ const T = {
 
 // ------------------------------ questions ------------------------------
 const QUESTIONS = [
+ {part:1, ans:1,
+  zh:{q:'今天的冠名赞助商 Helix 金融，主打为留学生提供什么？', opts:['奶茶优惠','保险保障','二手家具','代写简历'],
+      fact:'Services Financiers Helix Inc.：留学生医疗险、探亲旅游险、超级签证险。'},
+  en:{q:'Title sponsor Helix mainly offers international students…', opts:['Bubble tea deals','Insurance coverage','Used furniture','Resume writing'],
+      fact:'Services Financiers Helix Inc. — student health, visitor & Super Visa insurance.'}},
+ {part:1, ans:0,
+  zh:{q:'Helix 金融的创始人是谁？', opts:['Jiahao He','Céline Dion','圣诞老人','一只会算保费的海狸'],
+      fact:'Jiahao He——10+ 年金融保险经验，英法国粤四语服务，今天就在现场。'},
+  en:{q:'Who founded Helix Financial Services?', opts:['Jiahao He','Céline Dion','Santa Claus','A beaver who quotes premiums'],
+      fact:'Jiahao He — 10+ years in finance & insurance, serving in four languages. He’s here today.'}},
  {part:1, ans:0,
   zh:{q:'IEHO 的全称是什么？', opts:['International Education Help Organisation','International Event Hosting Organisation','Institute of Elite Hiring Online','International Exchange & Help Office'],
       fact:'IEHO = International Education Help Organisation，微信公众号/小红书 @IEHO。'},
@@ -321,11 +351,11 @@ const QUESTIONS = [
       fact:'30+ 个国家，CBRE Workplace Experience Host，精通英、法、普通话、粤语。'},
   en:{q:'Speaker Xiaoru Li has travelled to how many countries?', opts:['3+','10+','20+','30+'],
       fact:'30+ countries — CBRE Workplace Experience Host, fluent in English, French, Mandarin & Cantonese.'}},
- {part:1, ans:1,
-  zh:{q:'今天的冠名赞助商 Helix 金融，主打为留学生提供什么？', opts:['奶茶优惠','保险保障','二手家具','代写简历'],
-      fact:'Services Financiers Helix Inc.：留学生医疗险、探亲旅游险、超级签证险。'},
-  en:{q:'Title sponsor Helix mainly offers international students…', opts:['Bubble tea deals','Insurance coverage','Used furniture','Resume writing'],
-      fact:'Services Financiers Helix Inc. — student health, visitor & Super Visa insurance.'}},
+ {part:1, ans:3,
+  zh:{q:'在 Dice App 上，下面哪件事你做不到？', opts:['凌晨五点发起看日出的 hike，还实时分享位置','在墙上匿名喊"今晚谁去吃 poutine"','发起一场 20 人桌游快闪','让骰子替你写期末论文'],
+      fact:'前三件都是 Dice 日常：开放式活动谁都能发起，hiking 有位置分享，墙上想喊什么喊什么。论文还是得自己写。'},
+  en:{q:'Which of these can you NOT do on Dice?', opts:['Host a 5am sunrise hike with live location sharing','Shout “who wants poutine tonight?” anonymously on the Wall','Start a 20-person board-game pop-up','Make the dice write your final essay'],
+      fact:'The first three are everyday Dice — open events, hikes with live location, a wall for anything. The essay is on you.'}},
  {part:2, ans:1,
   zh:{q:'"Montréal" 的名字来源于？', opts:['一位法国国王','Mont Royal 皇家山','一种奶酪','原住民语"下雪"'],
       fact:'1535 年 Jacques Cartier 登上这座山，命名 Mont Royal，城市因此得名。'},
@@ -358,18 +388,85 @@ const QUESTIONS = [
       fact:'The cross went up in 1924 and lights up at night. A giant dice? Maybe our next event.'}},
 ];
 
+// ------------------------------ background map ------------------------------
+(function drawMap(){
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  const W = 1200, H = 1600;
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+  function line(x1,y1,x2,y2,w,c,dash){
+    const l = document.createElementNS(NS,'line');
+    l.setAttribute('x1',x1); l.setAttribute('y1',y1); l.setAttribute('x2',x2); l.setAttribute('y2',y2);
+    l.setAttribute('stroke',c); l.setAttribute('stroke-width',w);
+    if(dash) l.setAttribute('stroke-dasharray',dash);
+    svg.appendChild(l);
+  }
+  // Montréal's tilted street grid (~30°)
+  const a = Math.PI/6, dx = Math.cos(a), dy = Math.sin(a);
+  for(let i=-20;i<40;i++){ // rues (NE-SW)
+    const off = i*72;
+    line(off - H*dy, 0 - 0, off + H*dy*2, H*3*dx*0 + H, i%4===0 ? 2.2 : 1, '#3b3126');
+  }
+  for(let i=-10;i<30;i++){ // avenues (NW-SE), perpendicular-ish
+    const off = i*88;
+    line(0, off + 0, W, off - W*0.58, i%3===0 ? 2.2 : 1, '#3b3126');
+  }
+  // boulevards (gold): St-Laurent / Sherbrooke feel
+  line(W*0.52, -40, W*0.30, H+40, 4, '#a9885b');
+  line(-40, H*0.46, W+40, H*0.20, 4, '#a9885b');
+  // metro line (dashed gold)
+  line(-40, H*0.62, W+40, H*0.40, 3, '#a9885b', '14 10');
+  // St. Lawrence river — wide band bottom right
+  const river = document.createElementNS(NS,'path');
+  river.setAttribute('d','M -40 '+(H*0.86)+' C '+(W*0.3)+' '+(H*0.78)+', '+(W*0.6)+' '+(H*0.92)+', '+(W+40)+' '+(H*0.70)+
+    ' L '+(W+40)+' '+(H+40)+' L -40 '+(H+40)+' Z');
+  river.setAttribute('fill','#a9885b'); river.setAttribute('opacity','0.55');
+  svg.appendChild(river);
+  // Mont Royal — park blob + cross, upper left
+  const park = document.createElementNS(NS,'ellipse');
+  park.setAttribute('cx',W*0.16); park.setAttribute('cy',H*0.16);
+  park.setAttribute('rx',150); park.setAttribute('ry',110);
+  park.setAttribute('fill','none'); park.setAttribute('stroke','#3b3126'); park.setAttribute('stroke-width','2.5');
+  svg.appendChild(park);
+  line(W*0.16, H*0.16-46, W*0.16, H*0.16+10, 5, '#a9885b');
+  line(W*0.16-20, H*0.16-28, W*0.16+20, H*0.16-28, 5, '#a9885b');
+  document.getElementById('bgmap').appendChild(svg);
+})();
+
 // ------------------------------ state ------------------------------
 const $ = id => document.getElementById(id);
 const TIME = 15;
-let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false, detail = [];
+let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false;
 
 function t(){ return T[L]; }
+
+// rotating taglines
+let tagIdx = 0, tagTimer = null;
+function buildTags(){
+  const box = $('wTags'); box.innerHTML = '';
+  t().tags.forEach((s,i) => {
+    const d = document.createElement('div');
+    d.className = 'tag' + (i===0 ? ' on' : '');
+    d.textContent = s;
+    box.appendChild(d);
+  });
+  tagIdx = 0;
+  clearInterval(tagTimer);
+  tagTimer = setInterval(() => {
+    const kids = [...$('wTags').children];
+    if(!kids.length) return;
+    kids[tagIdx].classList.remove('on');
+    tagIdx = (tagIdx+1) % kids.length;
+    kids[tagIdx].classList.add('on');
+  }, 3800);
+}
 
 function applyLang(){
   document.documentElement.lang = L;
   $('chipZh').classList.toggle('on', L==='zh');
   $('chipEn').classList.toggle('on', L==='en');
-  $('wTag').textContent = t().tag;
+  buildTags();
   $('wLangLabel').textContent = t().langLabel;
   $('wNameLabel').textContent = t().nameLabel + (L==='zh' ? ' · Your name' : '');
   $('uname').placeholder = t().nameHint;
@@ -392,10 +489,30 @@ function show(id){
   window.scrollTo(0,0);
 }
 
+// ------- idle: back to welcome after 60s without touch -------
+let idleT = null;
+function armIdle(){
+  clearTimeout(idleT);
+  idleT = setTimeout(() => {
+    if($('scrWelcome').classList.contains('hidden')) resetToWelcome();
+    armIdle();
+  }, 60000);
+}
+['pointerdown','keydown','touchstart'].forEach(ev =>
+  document.addEventListener(ev, armIdle, {passive:true}));
+armIdle();
+
+function resetToWelcome(){
+  cancelAnimationFrame(timer);
+  locked = true;
+  $('uname').value = '';
+  show('scrWelcome');
+}
+
 $('btnStart').onclick = () => {
   const v = $('uname').value.trim();
   if(!v){ $('uname').focus(); return; }
-  user = v; qi = 0; score = 0; detail = [];
+  user = v; qi = 0; score = 0;
   interstitial(1, () => renderQ());
 };
 
@@ -408,6 +525,7 @@ function interstitial(part, next){
 }
 
 function renderQ(){
+  if(!$('scrWelcome').classList.contains('hidden')) return; // idle reset happened
   const q = QUESTIONS[qi], loc = q[L];
   locked = false;
   $('qPart').textContent = q.part === 1 ? t().qPart1 : t().qPart2;
@@ -433,6 +551,7 @@ function startTimer(q, order){
   t0 = performance.now();
   cancelAnimationFrame(timer);
   const tick = () => {
+    if($('scrQuiz').classList.contains('hidden')) return;
     const left = Math.max(0, TIME - (performance.now() - t0)/1000);
     $('qBar').style.width = (left/TIME*100) + '%';
     $('qTime').textContent = Math.ceil(left) + 's';
@@ -450,7 +569,6 @@ function pick(btn, correct, order, q){
   let gained = 0;
   if(correct) gained = 100 + Math.round(100 * left / TIME);
   score += gained;
-  detail.push({q: qi, ok: correct, pts: gained});
   const kids = [...$('qOpts').children];
   kids.forEach((k, slot) => {
     const oi = order[slot];
@@ -475,7 +593,7 @@ $('btnNext').onclick = () => {
   } else renderQ();
 };
 
-// ------------------------------ results ------------------------------
+// ------------------------------ results (local leaderboard) ------------------------------
 function tierText(rank){
   if(rank === 1) return t().tier1;
   if(rank <= 3) return t().tier3;
@@ -483,7 +601,7 @@ function tierText(rank){
   return t().tierElse;
 }
 
-async function finish(){
+function finish(){
   $('rKicker').textContent = t().rKicker;
   $('rRankLabel').textContent = t().rankLabel;
   $('rBoardLabel').textContent = t().boardLabel;
@@ -499,49 +617,28 @@ async function finish(){
     d.innerHTML = '<div class="n">' + String(i+1).padStart(2,'0') + '</div><div><b>' + f[0] + '</b><p>' + f[1] + '</p></div>';
     fx.appendChild(d);
   });
-  $('rRankNum').textContent = '–';
-  $('rTier').textContent = '';
-  $('rOfTotal').textContent = '';
-  $('rScoreLine').textContent = t().scoreLine(user, score);
-  $('rBoard').innerHTML = '';
-  $('rNote').textContent = '';
-  show('scrResult');
-  let ok = false;
-  try{
-    const sub = await rpc('quiz_submit_score', {p_name:user, p_score:score, p_detail:{d:detail, lang:L}});
-    const lb = await rpc('quiz_leaderboard', {});
-    if(sub && sub.ok && lb && lb.ok){
-      ok = true;
-      setRank(sub.rank, sub.total);
-      renderBoard(lb.top);
-    }
-  }catch(e){}
-  if(!ok){
-    const key = 'dice_quiz_lb';
-    const arr = JSON.parse(localStorage.getItem(key) || '[]');
-    arr.push({name:user, score:score});
-    arr.sort((a,b)=>b.score-a.score);
-    localStorage.setItem(key, JSON.stringify(arr.slice(0,50)));
-    const rank = arr.findIndex(e => e.name===user && e.score===score) + 1;
-    setRank(rank, arr.length);
-    renderBoard(arr.slice(0,10));
-    $('rNote').textContent = t().offline;
-  }
-}
-
-function setRank(rank, total){
+  const key = 'dice_quiz_lb';
+  const arr = JSON.parse(localStorage.getItem(key) || '[]');
+  const entry = {name:user, score:score, ts:Date.now()};
+  arr.push(entry);
+  arr.sort((a,b)=>b.score-a.score || (a.ts||0)-(b.ts||0));
+  localStorage.setItem(key, JSON.stringify(arr.slice(0,200)));
+  const rank = arr.indexOf(entry) + 1;
   $('rRankNum').textContent = rank;
   $('rTier').textContent = tierText(rank);
-  $('rOfTotal').textContent = t().ofTotal(total);
+  $('rOfTotal').textContent = t().ofTotal(arr.length);
+  $('rScoreLine').textContent = t().scoreLine(user, score);
+  renderBoard(arr.slice(0,10), entry);
+  show('scrResult');
 }
 
-function renderBoard(top){
+function renderBoard(top, entry){
   const tb = $('rBoard'); tb.innerHTML = '';
   const medals = ['👑','🥈','🥉'];
   top.forEach((e,i) => {
     const tr = document.createElement('tr');
     if(i < 3) tr.className = 'top3';
-    if(e.name === user && e.score === score) tr.className += ' me';
+    if(e === entry) tr.className += ' me';
     const m = i < 3 ? ' ' + medals[i] : '';
     tr.innerHTML = '<td class="r">' + String(i+1).padStart(2,'0') + '</td><td>' + esc(e.name) + m + '</td><td class="s">' + e.score + '</td>';
     tb.appendChild(tr);
@@ -549,7 +646,7 @@ function renderBoard(top){
 }
 function esc(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-$('btnAgain').onclick = () => { $('uname').value=''; show('scrWelcome'); $('uname').focus(); };
+$('btnAgain').onclick = () => { $('uname').value=''; show('scrWelcome'); };
 </script>
 </body>
 </html>
