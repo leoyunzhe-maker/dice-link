@@ -100,6 +100,10 @@
   /* interstitial */
   .inter{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
   .inter h2{font-size:50px;line-height:1.05}
+  /* in-your-world summary */
+  .worldline{display:flex;gap:14px;margin-top:15px;align-items:baseline}
+  .worldline .n{font-style:italic;color:var(--gold);font-size:17px;min-width:30px}
+  .worldline .wt{font-style:italic;font-size:18px;line-height:1.5}
   /* results — rank hero */
   .rankwrap{text-align:center;margin-top:34px}
   .rankhero{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:10px}
@@ -215,6 +219,16 @@
   <button class="btn hidden" id="btnNext"></button>
 </div>
 
+<!-- ============ IN YOUR WORLD ============ -->
+<div class="wrap hidden" id="scrWorld">
+  <div class="kicker" id="wdKicker"></div>
+  <h1 class="big" style="font-size:42px;margin-top:26px" id="wdTitle"></h1>
+  <div class="rule"></div>
+  <div class="tag" id="wdSub"></div>
+  <div style="margin-top:14px" id="wdLines"></div>
+  <button class="btn" id="btnWorld" style="margin-top:30px"></button>
+</div>
+
 <!-- ============ RESULTS ============ -->
 <div class="wrap hidden" id="scrResult">
   <div class="kicker" id="rKicker"></div>
@@ -282,6 +296,10 @@ const T = {
   ],
   qrLabel:'Scan to join', qrTxt2:'扫码下载 Dice<br>Dice — on the App Store',
   again:'下一位玩家',
+  worldKicker:'IN YOUR WORLD · 你的世界里',
+  worldSub:'以下内容全部属实——在你的世界里。',
+  worldBlank:'这一题，你的世界一片空白。',
+  toResults:'看成绩 →',
  },
  en:{
   tags:['Live trivia by Montréal’s local social app — play, rank up, meet Dice.','14 questions, 15 seconds each. Speed pays. Dare to try?','Crack the top 3 and everyone sees your name.'],
@@ -311,8 +329,30 @@ const T = {
   ],
   qrLabel:'Scan to join', qrTxt2:'Scan to get Dice<br>Dice — on the App Store',
   again:'Next player',
+  worldKicker:'IN YOUR WORLD',
+  worldSub:'Everything below is true — in your world.',
+  worldBlank:'Here, your world went blank.',
+  toResults:'See results →',
  }
 };
+
+// per-question "in your world" templates (p = the option the player picked)
+const WORLD = [
+ {zh:p=>'Helix 给留学生提供的，是「'+p+'」。', en:p=>'Helix offers international students: '+p+'.'},
+ {zh:p=>'Helix 的创始人是——'+p+'。', en:p=>'Helix was founded by '+p+'.'},
+ {zh:p=>'IEHO 的全称是「'+p+'」。', en:p=>'IEHO stands for “'+p+'”.'},
+ {zh:p=>'今天下午，你参加的是一场「'+p+'」。', en:p=>'This afternoon you attended a “'+p+'”.'},
+ {zh:p=>'TELUS 的 AI 工程师是 '+p+'。', en:p=>'The AI engineer at TELUS is '+p+'.'},
+ {zh:p=>'律师 Xin Yue Zhang 的前传：'+p+'。', en:p=>'Lawyer Xin Yue Zhang’s origin story: '+p+'.'},
+ {zh:p=>'李小茹的护照上，盖着 '+p+' 个国家的章。', en:p=>'Xiaoru Li’s passport counts '+p+' countries.'},
+ {zh:p=>'Dice 上唯一做不到的事：'+p+'。', en:p=>'The one thing Dice can’t do: '+p+'.'},
+ {zh:p=>'蒙特利尔得名于「'+p+'」。', en:p=>'Montréal is named after '+p+'.'},
+ {zh:p=>'这里地铁的隐藏属性：'+p+'。', en:p=>'The metro’s hidden feature: '+p+'.'},
+ {zh:p=>'你的 poutine 上，淋着薯条、肉汁和「'+p+'」。', en:p=>'Your poutine: fries, gravy and '+p+'.'},
+ {zh:p=>'地下城 RÉSO 绵延 '+p+'。', en:p=>'The RÉSO stretches '+p+'.'},
+ {zh:p=>'蒙特利尔 bagel 的真相：'+p+'。', en:p=>'The truth about Montréal bagels: '+p+'.'},
+ {zh:p=>'Mount Royal 山顶上，立着「'+p+'」。', en:p=>'On top of Mount Royal stands '+p+'.'},
+];
 
 // ------------------------------ questions ------------------------------
 const QUESTIONS = [
@@ -437,7 +477,7 @@ const QUESTIONS = [
 // ------------------------------ state ------------------------------
 const $ = id => document.getElementById(id);
 const TIME = 15;
-let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false;
+let user = '', qi = 0, score = 0, timer = null, t0 = 0, locked = false, picks = [];
 
 function t(){ return T[L]; }
 
@@ -484,7 +524,7 @@ $('chipEn').onclick = () => { L='en'; applyLang(); };
 applyLang();
 
 function show(id){
-  ['scrWelcome','scrInter','scrQuiz','scrResult'].forEach(s => $(s).classList.add('hidden'));
+  ['scrWelcome','scrInter','scrQuiz','scrWorld','scrResult'].forEach(s => $(s).classList.add('hidden'));
   $(id).classList.remove('hidden');
   window.scrollTo(0,0);
 }
@@ -512,7 +552,7 @@ function resetToWelcome(){
 $('btnStart').onclick = () => {
   const v = $('uname').value.trim();
   if(!v){ $('uname').focus(); return; }
-  user = v; qi = 0; score = 0;
+  user = v; qi = 0; score = 0; picks = [];
   interstitial(1, () => renderQ());
 };
 
@@ -540,7 +580,7 @@ function renderQ(){
     const b = document.createElement('button');
     b.className = 'opt';
     b.innerHTML = '<span class="idx">' + ['a','b','c','d'][slot] + '.</span><span>' + loc.opts[oi] + '</span>';
-    b.onclick = () => pick(b, oi === q.ans, order, q);
+    b.onclick = () => pick(b, oi, order, q);
     box.appendChild(b);
   });
   show('scrQuiz');
@@ -555,24 +595,26 @@ function startTimer(q, order){
     const left = Math.max(0, TIME - (performance.now() - t0)/1000);
     $('qBar').style.width = (left/TIME*100) + '%';
     $('qTime').textContent = Math.ceil(left) + 's';
-    if(left <= 0){ if(!locked) pick(null, false, order, q); return; }
+    if(left <= 0){ if(!locked) pick(null, -1, order, q); return; }
     timer = requestAnimationFrame(tick);
   };
   tick();
 }
 
-function pick(btn, correct, order, q){
+function pick(btn, pickedIdx, order, q){
   if(locked) return;
   locked = true;
   cancelAnimationFrame(timer);
+  picks[qi] = pickedIdx;
+  const correct = pickedIdx === q.ans;
   const left = Math.max(0, TIME - (performance.now() - t0)/1000);
   let gained = 0;
   if(correct) gained = 100 + Math.round(100 * left / TIME);
   score += gained;
   const kids = [...$('qOpts').children];
   kids.forEach((k, slot) => {
-    const oi = order[slot];
-    if(oi === q.ans) k.classList.add('correct');
+    const oidx = order[slot];
+    if(oidx === q.ans) k.classList.add('correct');
     else if(k === btn) k.classList.add('wrong');
     else k.classList.add('dis');
     k.onclick = null;
@@ -587,11 +629,30 @@ function pick(btn, correct, order, q){
 
 $('btnNext').onclick = () => {
   qi++;
-  if(qi >= QUESTIONS.length){ finish(); return; }
+  if(qi >= QUESTIONS.length){ showWorld(); return; }
   if(QUESTIONS[qi].part === 2 && QUESTIONS[qi-1].part === 1){
     interstitial(2, () => renderQ());
   } else renderQ();
 };
+
+// ------------------------------ in your world ------------------------------
+function showWorld(){
+  $('wdKicker').textContent = t().worldKicker;
+  $('wdTitle').textContent = L === 'zh' ? (user + ' 的蒙特利尔,') : (user + '’s Montréal,');
+  $('wdSub').textContent = t().worldSub;
+  const box = $('wdLines'); box.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const p = picks[i];
+    const txt = (p == null || p < 0) ? t().worldBlank : WORLD[i][L](q[L].opts[p]);
+    const d = document.createElement('div');
+    d.className = 'worldline';
+    d.innerHTML = '<div class="n">' + String(i+1).padStart(2,'0') + '</div><div class="wt">' + esc(txt) + '</div>';
+    box.appendChild(d);
+  });
+  $('btnWorld').textContent = t().toResults;
+  show('scrWorld');
+}
+$('btnWorld').onclick = () => finish();
 
 // ------------------------------ results (local leaderboard) ------------------------------
 function tierText(rank){
