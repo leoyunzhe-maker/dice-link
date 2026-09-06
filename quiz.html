@@ -137,6 +137,22 @@
     letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
   @media (max-width:420px){ h1.big{font-size:48px} .qcn{font-size:22px} .rankhero .num{font-size:120px}
     .heroDie{width:74px;height:74px;right:0} }
+  /* landscape / wide (iPad horizontal): two-column layouts, no scrolling to reach buttons */
+  @media (min-width:900px){
+    .wrap{max-width:1160px}
+    .wgrid{display:grid;grid-template-columns:1.05fr 1fr;grid-template-areas:'a b' 'c d';
+      column-gap:64px;align-items:start}
+    .wgrid .ga{grid-area:a}
+    .wgrid .gb{grid-area:b;margin-top:40px!important}
+    .wgrid .gc{grid-area:c}
+    .wgrid .gd{grid-area:d;margin-top:26px}
+    .wgrid>.divider{display:none}
+    .opts{grid-template-columns:1fr 1fr}
+    #scrQuiz{max-width:1000px}
+    #wdLines{display:grid;grid-template-columns:1fr 1fr;column-gap:52px}
+    .resgrid{display:grid;grid-template-columns:1fr 1.15fr;column-gap:64px;align-items:start}
+    .abgrid{display:grid;grid-template-columns:1.15fr 1fr;column-gap:64px;align-items:start}
+  }
 </style>
 </head>
 <body>
@@ -147,7 +163,8 @@
 <!-- ============ WELCOME ============ -->
 <div class="wrap" id="scrWelcome">
   <div class="kicker">IEHO × <span class="g">DICE</span> — LIVE TRIVIA</div>
-  <div class="hero" style="margin-top:40px">
+  <div class="wgrid">
+  <div class="hero ga" style="margin-top:40px">
     <div class="heroDie"><div class="dface">
       <i style="left:16%;top:16%"></i><i style="right:16%;top:16%"></i>
       <i class="g" style="left:50%;top:50%;transform:translate(-50%,-50%)"></i>
@@ -158,7 +175,7 @@
     <div class="tagswap" id="wTags"></div>
   </div>
 
-  <div class="card" style="margin-top:30px">
+  <div class="card gb" style="margin-top:30px">
     <div class="label" style="margin-bottom:14px" id="wLangLabel"></div>
     <div class="langrow">
       <button class="chip on" id="chipZh">中文</button>
@@ -169,7 +186,7 @@
     <button class="btn pulse" id="btnStart"></button>
   </div>
 
-  <div style="margin-top:30px">
+  <div class="gc" style="margin-top:30px">
     <div class="label" id="wHowLabel"></div>
     <div class="step"><div class="n">01</div><div><b id="h1b"></b><p id="h1p"></p></div></div>
     <div class="step"><div class="n">02</div><div><b id="h2b"></b><p id="h2p"></p></div></div>
@@ -178,7 +195,7 @@
 
   <div class="divider"></div>
 
-  <div>
+  <div class="gd">
     <div class="label" id="wWhatLabel"></div>
     <div class="tag" style="margin-top:10px" id="wPitch"></div>
     <div class="qrrow">
@@ -188,6 +205,7 @@
         <div style="font-size:15px;color:var(--dim);line-height:1.6" id="wQrTxt"></div>
       </div>
     </div>
+  </div>
   </div>
   <div class="vfoot"><span>Dice MTL — EST. 2026 · Montréal</span></div>
 </div>
@@ -233,6 +251,7 @@
 <div class="wrap hidden" id="scrResult">
   <div class="kicker" id="rKicker"></div>
 
+  <div class="resgrid">
   <div class="rankwrap">
     <div class="label" id="rRankLabel"></div>
     <div class="rankhero"><span class="no">N°</span><span class="num" id="rRankNum">–</span></div>
@@ -246,13 +265,16 @@
     <div class="label" id="rBoardLabel"></div>
     <table class="lb" id="rBoard"></table>
   </div>
+  </div>
 
   <div class="divider"></div>
 
   <div class="kicker" id="rAboutKicker"></div>
   <h1 class="big" style="font-size:48px;margin-top:12px">Dice,</h1>
   <div class="tag" id="rAboutPitch"></div>
+  <div class="abgrid">
   <div style="margin-top:8px" id="rFeats"></div>
+  <div>
   <div class="qrrow">
     <div class="qrbox"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges"><path fill="#3b3126" d="M0 0h7v1h-7zM8 0h2v1h-2zM11 0h1v1h-1zM15 0h1v1h-1zM17 0h2v1h-2zM20 0h1v1h-1zM22 0h7v1h-7zM0 1h1v1h-1zM6 1h1v1h-1zM13 1h2v1h-2zM17 1h1v1h-1zM19 1h1v1h-1zM22 1h1v1h-1zM28 1h1v1h-1zM0 2h1v1h-1zM2 2h3v1h-3zM6 2h1v1h-1zM9 2h1v1h-1zM11 2h2v1h-2zM15 2h4v1h-4zM20 2h1v1h-1zM22 2h1v1h-1zM24 2h3v1h-3zM28 2h1v1h-1zM0 3h1v1h-1zM2 3h3v1h-3zM6 3h1v1h-1zM8 3h2v1h-2zM13 3h1v1h-1zM18 3h2v1h-2zM22 3h1v1h-1zM24 3h3v1h-3zM28 3h1v1h-1zM0 4h1v1h-1zM2 4h3v1h-3zM6 4h1v1h-1zM8 4h2v1h-2zM11 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM18 5h2v1h-2zM22 5h1v1h-1zM28 5h1v1h-1zM0 6h7v1h-7zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h7v1h-7zM8 7h4v1h-4zM14 7h7v1h-7zM0 8h1v1h-1zM4 8h1v1h-1zM6 8h7v1h-7zM14 8h4v1h-4zM20 8h6v1h-6zM28 8h1v1h-1zM0 9h1v1h-1zM2 9h4v1h-4zM7 9h1v1h-1zM9 9h1v1h-1zM11 9h2v1h-2zM15 9h1v1h-1zM22 9h1v1h-1zM24 9h5v1h-5zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h2v1h-2zM15 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM24 10h1v1h-1zM28 10h1v1h-1zM0 11h3v1h-3zM4 11h2v1h-2zM8 11h1v1h-1zM10 11h1v1h-1zM14 11h1v1h-1zM16 11h2v1h-2zM19 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h2v1h-2zM0 12h1v1h-1zM2 12h2v1h-2zM6 12h1v1h-1zM9 12h1v1h-1zM11 12h4v1h-4zM16 12h2v1h-2zM19 12h3v1h-3zM23 12h1v1h-1zM27 12h1v1h-1zM0 13h2v1h-2zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h2v1h-2zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h2v1h-2zM22 13h7v1h-7zM0 14h4v1h-4zM5 14h6v1h-6zM13 14h3v1h-3zM17 14h1v1h-1zM21 14h3v1h-3zM25 14h2v1h-2zM28 14h1v1h-1zM0 15h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM8 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h3v1h-3zM19 15h2v1h-2zM22 15h2v1h-2zM27 15h2v1h-2zM2 16h1v1h-1zM4 16h5v1h-5zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h4v1h-4zM20 16h2v1h-2zM23 16h1v1h-1zM27 16h1v1h-1zM0 17h1v1h-1zM2 17h3v1h-3zM7 17h1v1h-1zM9 17h3v1h-3zM13 17h3v1h-3zM17 17h2v1h-2zM20 17h6v1h-6zM27 17h2v1h-2zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h1v1h-1zM12 18h1v1h-1zM15 18h2v1h-2zM18 18h1v1h-1zM20 18h4v1h-4zM26 18h1v1h-1zM28 18h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM10 19h1v1h-1zM14 19h5v1h-5zM20 19h4v1h-4zM27 19h2v1h-2zM0 20h3v1h-3zM4 20h1v1h-1zM6 20h12v1h-12zM19 20h7v1h-7zM28 20h1v1h-1zM8 21h1v1h-1zM10 21h1v1h-1zM15 21h1v1h-1zM17 21h4v1h-4zM24 21h1v1h-1zM28 21h1v1h-1zM0 22h7v1h-7zM8 22h1v1h-1zM10 22h6v1h-6zM17 22h1v1h-1zM19 22h2v1h-2zM22 22h1v1h-1zM24 22h3v1h-3zM28 22h1v1h-1zM0 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM17 23h4v1h-4zM24 23h1v1h-1zM0 24h1v1h-1zM2 24h3v1h-3zM6 24h1v1h-1zM8 24h2v1h-2zM13 24h1v1h-1zM16 24h2v1h-2zM19 24h7v1h-7zM27 24h1v1h-1zM0 25h1v1h-1zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h2v1h-2zM14 25h2v1h-2zM18 25h4v1h-4zM23 25h1v1h-1zM28 25h1v1h-1zM0 26h1v1h-1zM2 26h3v1h-3zM6 26h1v1h-1zM9 26h2v1h-2zM12 26h9v1h-9zM25 26h4v1h-4zM0 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM17 27h1v1h-1zM20 27h3v1h-3zM25 27h1v1h-1zM27 27h2v1h-2zM0 28h7v1h-7zM8 28h1v1h-1zM13 28h2v1h-2zM16 28h3v1h-3zM20 28h1v1h-1zM24 28h2v1h-2zM27 28h1v1h-1z"/></svg></div>
     <div>
@@ -261,6 +283,8 @@
     </div>
   </div>
   <button class="btn ghost" id="btnAgain" style="margin-top:34px"></button>
+  </div>
+  </div>
   <div class="vfoot"><span>Events · Friends · Montréal</span></div>
 </div>
 
@@ -536,7 +560,7 @@ function armIdle(){
   idleT = setTimeout(() => {
     if($('scrWelcome').classList.contains('hidden')) resetToWelcome();
     armIdle();
-  }, 60000);
+  }, 120000);
 }
 ['pointerdown','keydown','touchstart'].forEach(ev =>
   document.addEventListener(ev, armIdle, {passive:true}));
